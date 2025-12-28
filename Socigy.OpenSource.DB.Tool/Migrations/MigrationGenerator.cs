@@ -9,7 +9,7 @@ namespace Socigy.OpenSource.DB.Tool.Migrations
 {
     public static class MigrationGenerator
     {
-        public static async Task PublishMigration(SchemaDiff diff)
+        public static async Task PublishMigration(SchemaDiff diff, bool firstMigration)
         {
             diff.ProvideDefaults();
 
@@ -33,7 +33,7 @@ namespace Socigy.OpenSource.DB.Tool.Migrations
             if (!Directory.Exists(Configuration.SocigyMigrationsFolderPath))
                 Directory.CreateDirectory(Configuration.SocigyMigrationsFolderPath);
 
-            var (upScript, downScript) = sqlGenerator.Generate(diff);
+            var (upScript, downScript) = sqlGenerator.Generate(diff, firstMigration);
 
 #if IsWindows
             string? migrationName = UI.MigrationNameInputDialog.Show($"{Configuration.BaseNamespace}: Please choose name for the new DB migration", "DB Migration Name:");

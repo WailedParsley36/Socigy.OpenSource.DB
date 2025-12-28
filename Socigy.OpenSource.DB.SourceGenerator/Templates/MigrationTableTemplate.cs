@@ -18,7 +18,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
     public partial class MigrationTableTemplate : MigrationTableTemplateBase
     {
@@ -30,18 +30,20 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         {
             this.Write("using System;\r\nusing Socigy.OpenSource.DB.Attributes;\r\n\r\nnamespace ");
             
-            #line 9 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+            #line 9 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
             #line hidden
-            this.Write(@".Generated
+            this.Write(@"
 {
     [Table(""_scg_migrations"")]
     public partial class Migrations
     {
         [PrimaryKey]
-        public string Id { get; set; }
+        public long Id { get; set; }
+
+        public string HumanId { get; set; }
     
         [Default]
         public DateTime AppliedAt { get; set; }
@@ -57,7 +59,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 27 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+        #line 29 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
 
     public string BaseNamespace { get; set; }
 

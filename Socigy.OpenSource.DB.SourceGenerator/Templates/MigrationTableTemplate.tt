@@ -6,13 +6,15 @@
 using System;
 using Socigy.OpenSource.DB.Attributes;
 
-namespace <#= BaseNamespace #>.Generated
+namespace <#= BaseNamespace #>
 {
     [Table("_scg_migrations")]
     public partial class Migrations
     {
         [PrimaryKey]
-        public string Id { get; set; }
+        public long Id { get; set; }
+
+        public string HumanId { get; set; }
     
         [Default]
         public DateTime AppliedAt { get; set; }

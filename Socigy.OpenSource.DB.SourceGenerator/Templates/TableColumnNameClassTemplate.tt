@@ -10,21 +10,23 @@ namespace <#= Namespace #>
     public partial class <#= ClassName #> : IDbTable
     {
         // TODO: Move to the query etc. logic
+        #nullable enable
         protected Dictionary<string, object?> _CustomValues { get; set; }
         public object? GetCustomValue(string key) 
         {
             if (_CustomValues == null)
-                return;
+                return null;
             
             return _CustomValues.ContainsKey(key) ? _CustomValues[key] : null;
         }
         public T? GetCustomValue<T>(string key) 
         {
             if (_CustomValues == null)
-                return;
+                return default(T);
             
             return _CustomValues.ContainsKey(key) ? (T?)_CustomValues[key] : default;
         }
+        #nullable disable
 
         public const string TableName = "<#= TableName #>";
         public string GetTableName() => TableName;
@@ -37,7 +39,7 @@ namespace <#= Namespace #>
             foreach(var col in Columns) 
             {
 #>
-                <#= col.Name #>ColumnName => "<#= col.DatabaseName #>",
+                "<#= col.Name #>" => <#= col.Name #>ColumnName,
 <#
             }
         #>

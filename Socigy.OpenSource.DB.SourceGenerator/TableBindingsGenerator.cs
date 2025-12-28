@@ -52,6 +52,13 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                     Columns = []
                 };
 
+                var tableSyntaxTemplate = new TableSyntaxGeneratorTemplate()
+                {
+                    Namespace = tableColNameClassTemplate.Namespace,
+                    ClassName = tableColNameClassTemplate.ClassName,
+                    DbEnginePrefix = "Postgresql"
+                };
+
                 foreach (var member in table.Members)
                 {
                     if (member is not PropertyDeclarationSyntax column)
@@ -79,9 +86,20 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                     }
 
                     tableColNameClassTemplate.Columns.Add(columnInfo);
+                    tableSyntaxTemplate.Columns.Add((
+                        SourceName: symbolInfo.Name,
+                        TypeName: symbolInfo.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                        Converter: member.AttributeLists.Count > 0 ? symbolInfo.GetAttributes()
+                            .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == ColumnAttributeFullName)?
+                            .NamedArguments
+                            .FirstOrDefault(na => na.Key == nameof(ColumnAttribute.ValueConvertor))
+                            .Value
+                            .Value?.ToString() : null
+                    ));
                 }
 
-                ctx.AddSource($"{tableColNameClassTemplate.ClassName}.g.cs", tableColNameClassTemplate.TransformText());
+                ctx.AddSource($"{tableColNameClassTemplate.ClassName}.table.g.cs", tableColNameClassTemplate.TransformText());
+                ctx.AddSource($"{tableColNameClassTemplate.ClassName}SyntaxMethods.table.g.cs", tableSyntaxTemplate.TransformText());
             }
         }
     }

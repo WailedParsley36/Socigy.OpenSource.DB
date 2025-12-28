@@ -75,7 +75,8 @@ async Task ExecuteGenerateAsync(ParseResult result)
     await JsonSerializer.SerializeAsync(stream, schema, Configuration.JsonOptions);
     await stream.DisposeAsync();
 
-    var diff = SchemaComparer.Compare(Configuration.SavedSchema ?? new DbSchema(), Configuration.CurrentSchema);
+    bool isFirstMigration = Configuration.SavedSchema == null;
+    var diff = SchemaComparer.Compare(isFirstMigration ? new DbSchema() : Configuration.SavedSchema!, Configuration.CurrentSchema);
     string diffPath = Configuration.StructureDiffJsonPath;
     if (File.Exists(diffPath))
         File.Delete(diffPath);
@@ -86,7 +87,7 @@ async Task ExecuteGenerateAsync(ParseResult result)
     await stream.DisposeAsync();
 
     if (shouldMigrate)
-        await MigrationGenerator.PublishMigration(diff);
+        await MigrationGenerator.PublishMigration(diff, isFirstMigration);
 
     Logger.Log($"Finished tasks in {watch.ElapsedMilliseconds}ms");
     watch.Stop();

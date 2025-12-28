@@ -1,0 +1,386 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+// Auto-generated code. Do not modify manually. Socigy.OpenSource.DB Source Generator
+
+using System.Data.Common;
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core.Convertors;
+using Socigy.OpenSource.DB.Core.Parsers;
+using Socigy.OpenSource.DB.Core.Parsers.<#= DbEnginePrefix #>;
+using Socigy.OpenSource.DB.Core.Delegates;
+
+namespace <#= Namespace #>
+{
+	public partial class <#= ClassName #>
+	{
+        public static TableQueryBuilder Query(Expression<Func<<#= ClassName #>, bool>> where)
+        {
+            return new TableQueryBuilder().Where(where);
+        }
+
+        public static TableQueryBuilder Query()
+        {
+            return new TableQueryBuilder();
+        }
+
+        #region Object <-> DB Conversion
+        public T? ReadValue<T>(DbDataReader reader, string columnName, Dictionary<string, string>? columnOverrides = null)
+        {
+            int index = GetColumnDbIndex(reader, columnName, columnOverrides);
+            if (index < 0 || reader.IsDBNull(index))
+                return default;
+
+            return (T)reader.GetValue(index);
+        }
+
+        public T? ReadValueConvertor<T, TConvertor>(DbDataReader reader, int index)
+            where TConvertor : IDbValueConvertor<T>, new()
+        {
+            if (index < 0 || reader.IsDBNull(index))
+                return default;
+
+            var convertor = new TConvertor();
+            return convertor.ConvertFromDbValue(reader.GetValue(index));
+        }
+
+        public int GetColumnDbIndex(DbDataReader reader, string columnName, Dictionary<string, string>? columnOverrides = null)
+        {
+            if (columnOverrides != null && columnOverrides.ContainsKey(columnName))
+                columnName = columnOverrides[columnName];
+
+            return reader.GetOrdinal(columnName);
+        }
+
+        public <#= ClassName #>() {}
+        public <#= ClassName #>(DbDataReader reader, Dictionary<string, string>? columnOverrides = null)
+        {
+        <#
+            foreach(var column in Columns) 
+            {
+                if (string.IsNullOrEmpty(column.Converter))
+                {
+
+#>          <#= column.SourceName #> = ReadValue<<#= column.TypeName #>>(reader, "<#= column.SourceName #>", columnOverrides);
+<#
+                }
+                else
+                {
+#>          <#= column.SourceName #> = ReadValueConvertor<<#= column.TypeName #>,<#= column.Converter #>>(reader, "<#= column.SourceName #>", columnOverrides);
+<#
+                }
+            }
+        #>
+        }
+
+        public static <#= ClassName #> ConvertFrom(DbDataReader reader, Dictionary<string, string>? columnOverrides = null)
+        {
+            return new <#= ClassName #>(reader, columnOverrides);
+        }
+        #endregion
+
+        public static Task<bool> InsertAsync()
+        {
+            // TODO: Implement conversion logic
+            throw new NotImplementedException();
+        }
+        public static Task<T?> InsertAsyncReturning<T>()
+        {
+            // TODO: Implement conversion logic
+            throw new NotImplementedException();
+        }
+
+        public static async Task<int> UpdateAsync()
+        {
+            // TODO: Implement conversion logic
+            throw new NotImplementedException();
+        }
+
+        public static async Task<bool> DeleteAsync()
+        {
+            // TODO: Implement conversion logic
+            throw new NotImplementedException();
+        }
+
+        public struct TableQueryBuilder
+        {
+            private DbConnection? _Connection;
+            private DbTransaction? _Transaction;
+            private DbBatch? _Batch;
+
+            private Expression<Func<<#= ClassName #>, object?[]>> _SelectClause;
+            private Expression<Func<<#= ClassName #>, bool>> _WhereClause;
+
+            private Expression<Func<<#= ClassName #>, object?[]>>? _OrderByClause;
+            private bool _OrderByDescending = false;
+
+            private int _Limit = -1;
+            private int _Offset = -1;
+
+            public TableQueryBuilder()
+            {
+            }
+
+            /// <summary>
+            /// Associates the specified database transaction with the query builder instance. Use this or <see cref="WithConnection(DbConnection)"/> to specify the context for query execution.
+            /// </summary>
+            /// <remarks>Use this method to ensure that all queries executed by this builder participate in
+            /// the provided transaction. This is useful for maintaining atomicity across multiple operations.</remarks>
+            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="transaction"/> is null.</exception>
+            /// <exception cref="ArgumentException">Thrown if the provided <paramref name="transaction"/> has no associated DbConnection.</exception>
+            /// <param name="transaction">The database transaction to use for subsequent query operations. Cannot be null.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the transaction applied.</returns>
+            public TableQueryBuilder WithTransaction(DbTransaction transaction)
+            {
+                _Transaction = transaction;
+                if (_Transaction == null)
+                    throw new ArgumentNullException(nameof(transaction));
+                else if (_Transaction.Connection == null)
+                    throw new ArgumentException("The provided transaction has no associated DbConnection.", nameof(transaction));
+
+                _Connection = _Transaction.Connection;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the database connection to be used for subsequent queries and returns the current builder instance. Use this or <see cref="WithTransaction(DbTransaction)"/> to specify the context for query execution."/>
+            /// </summary>
+            /// <remarks>This method enables fluent configuration of the query builder. The provided
+            /// connection will be used for all future query operations performed by this instance.</remarks>
+            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="connection"/> is null.</exception>
+            /// <param name="connection">The database connection to associate with the query builder. Cannot be null.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the specified connection set.</returns>
+            public TableQueryBuilder WithConnection(DbConnection connection)
+            {
+                _Connection = connection;
+                if (_Connection == null)
+                    throw new ArgumentNullException(nameof(connection));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Associates the specified database batch operation with the query builder, enabling batched execution of user
+            /// table queries.
+            /// </summary>
+            /// <remarks>Use this method to execute multiple queries as part of a single batch operation. This
+            /// can improve performance and ensure atomicity when supported by the underlying database.</remarks>
+            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="batch"/> is null and Connection/Transaction was not set.</exception>
+            /// <param name="batch">The database batch to use for executing queries. If null the connection/transaction must be specified!</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the batch operation applied.</returns>
+            public TableQueryBuilder WithBatch(DbBatch? batch)
+            {
+                if (batch == null)
+                {
+                    if (_Connection == null && _Transaction == null)
+                        throw new ArgumentNullException(nameof(batch), "If batch is null, either connection or transaction must be specified!");
+
+                    _Batch = _Connection?.CreateBatch() ?? _Transaction!.Connection?.CreateBatch() ?? throw new InvalidOperationException("The provided transaction has no DbConnection from which a DbBatch could be created");
+                    _Batch.Transaction = _Transaction;
+                }
+                else
+                    _Batch = batch;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Specifies the columns to select when querying the user table.
+            /// </summary>
+            /// <remarks>If not called, all columns will be selected by default. This method allows for
+            /// projection of only the desired columns, which can improve query performance and reduce data
+            /// transfer.</remarks>
+            /// <param name="select">An expression that defines which properties of the <see cref="<#= ClassName #>"/> entity to include in the result set.
+            /// The expression should return an array of selected property values.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance, enabling method chaining.</returns>
+            public TableQueryBuilder Select(Expression<Func<<#= ClassName #>, object?[]>> select)
+            {
+                _SelectClause = select;
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a filter condition to the query that determines which users are included based on the specified
+            /// predicate.
+            /// </summary>
+            /// <remarks>Only one filter condition can be set per query builder instance; subsequent calls to
+            /// <c>Where</c> will overwrite the previous condition.</remarks>
+            /// <param name="where">An expression that defines the criteria used to select users. The predicate should return <see
+            /// langword="true"/> for users to include in the results.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance, enabling method chaining for additional query
+            /// configuration.</returns>
+            public TableQueryBuilder Where(Expression<Func<<#= ClassName #>, bool>> where)
+            {
+                _WhereClause = where;
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the maximum number of user records to return in the query results.
+            /// </summary>
+            /// <param name="limit">The maximum number of user records to include in the result set. Must be zero or a positive integer.</param>
+            /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided <paramref name="limit"/> is negative.</exception>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the limit applied.</returns>
+            public TableQueryBuilder Limit(int limit)
+            {
+                ArgumentOutOfRangeException.ThrowIfNegative(limit);
+
+                _Limit = limit;
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the number of rows to skip before starting to return results from the query.
+            /// </summary>
+            /// <remarks>Use this method to implement paging in query results. Calling this method overwrites
+            /// any previously set offset value.</remarks>
+            /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided <paramref name="offset"/> is negative.</exception>
+            /// <param name="offset">The number of rows to skip. Must be zero or greater.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the offset applied.</returns>
+            public TableQueryBuilder Offset(int offset)
+            {
+                ArgumentOutOfRangeException.ThrowIfNegative(offset);
+
+                _Offset = offset;
+                return this;
+            }
+
+            /// <summary>
+            /// Limits the number of rows returned by the query to the specified maximum.
+            /// </summary>
+            /// <remarks>Use this method to restrict the result set to a specific number of rows, similar to
+            /// the SQL TOP clause. Calling this method overrides any previous row limit set on the query.</remarks>
+            /// <param name="top">The maximum number of rows to return. Must be greater than zero.</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the row limit applied.</returns>
+            public TableQueryBuilder Top(int top)
+            {
+                return Limit(top);
+            }
+
+            /// <summary>
+            /// Specifies the ordering of results for the query using the provided expression.
+            /// </summary>
+            /// <remarks>If multiple properties are specified in the array, results will be ordered by each
+            /// property in the order they appear. This method can be chained with other query builder methods to construct
+            /// complex queries.</remarks>
+            /// <param name="clause">An expression that defines one or more properties of the <see cref="<#= ClassName #>"/> entity to order the results by.
+            /// The array elements determine the order of precedence. You can use <see cref="DB.OrderBy"/> for complex ordering (default will be ASC)</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the ordering clause applied.</returns>
+            public TableQueryBuilder OrderBy(Expression<Func<<#= ClassName #>, object?[]>> clause)
+            {
+                _OrderByClause = clause;
+                return this;
+            }
+
+            /// <summary>
+            /// Specifies a descending order for the query results based on the provided user properties.
+            /// </summary>
+            /// <remarks>Call this method to order the query results by one or more user properties in
+            /// descending order. This method can be chained with other query builder methods to construct complex
+            /// queries.</remarks>
+            /// <param name="clause">An expression that selects one or more properties of the <see cref="<#= ClassName #>"/> entity to use for ordering the
+            /// results in descending order. You can use <see cref="DB.OrderBy"/> for complex ordering (default will be DESC)</param>
+            /// <returns>The current <see cref="TableQueryBuilder"/> instance to allow method chaining.</returns>
+            public TableQueryBuilder OrderByDesc(Expression<Func<<#= ClassName #>, object?[]>> clause)
+            {
+                _OrderByClause = clause;
+                _OrderByDescending = true;
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a new command to the current batch operation.
+            /// </summary>
+            /// <remarks>This method should be called only after a batch has been initialized using
+            /// WithBatch(). Attempting to add to a batch without initialization will result in an exception.</remarks>
+            /// <exception cref="InvalidOperationException">Thrown if no batch has been provided. Call WithBatch() before invoking this method.</exception>
+            public void AddToBatch()
+            {
+                if (_Batch == null)
+                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+                var batchCommand = _Batch.CreateBatchCommand();
+                _Batch.BatchCommands.Add(batchCommand);
+            }
+
+            /// <summary>
+            /// Adds a new command to the current database batch asynchronously.
+            /// </summary>
+            /// <remarks>This method should be called only after a batch has been initialized using
+            /// WithBatch(). It is typically used to accumulate multiple commands for execution as a single batch
+            /// operation.</remarks>
+            /// <returns>A task that represents the asynchronous operation.</returns>
+            /// <exception cref="InvalidOperationException">Thrown if no database batch has been provided. Call WithBatch() before invoking this method.</exception>
+            public async Task AddToBatchAsync()
+            {
+                if (_Batch == null)
+                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+                var batchCommand = _Batch.CreateBatchCommand();
+                _Batch.BatchCommands.Add(batchCommand);
+            }
+
+            private ISqlVisitor GetSelectVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command)
+            {
+                return new <#= DbEnginePrefix #>SelectVisitor(param, getColName, command);
+            }
+
+            private ISqlVisitor GetWhereVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command)
+            {
+                return new <#= DbEnginePrefix #>WhereVisitor(param, getColName, command);
+            }
+
+            private ISqlVisitor GetOrderByVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command, bool orderByDesc)
+            {
+                return new <#= DbEnginePrefix #>OrderByVisitor(param, getColName, command, orderByDesc);
+            }
+
+            public async IAsyncEnumerable<<#= ClassName #>> ExecuteAsync()
+            {
+                if (_Batch != null)
+                    throw new InvalidOperationException("Cannot execute command, when DbBatch was provided. Please call AddToBatchAsync()");
+                else if (_Connection == null)
+                    throw new InvalidOperationException("Cannot execute command, when no DbConnection was provided. Please call WithConnection()/WithTransaction() first");
+
+                if (_Connection.State != System.Data.ConnectionState.Open)
+                    await _Connection.OpenAsync();
+
+                var command = _Connection.CreateCommand();
+
+                Stopwatch watch = Stopwatch.StartNew();
+                var parser = new SqlQueryBuilderExpressionParser<<#= ClassName #>>(command, <#= ClassName #>.GetColumnDbName, GetSelectVisitor, GetWhereVisitor, GetOrderByVisitor);
+                parser.Process(<#= ClassName #>.TableName, _SelectClause, _WhereClause, _OrderByClause, _OrderByDescending);
+                if (_Limit > 0)
+                    parser.AddLimit(_Limit);
+                if (_Offset > 0)
+                    parser.AddOffset(_Offset);
+
+                command.CommandText = parser.ToString();
+
+                Console.WriteLine($"[TableQueryBuilder] Executing SQL Query: {command.CommandText} (Prepared in {watch.ElapsedMilliseconds} ms)");
+
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    yield return <#= ClassName #>.ConvertFrom(reader);
+                }
+            }
+        }
+	}
+}
+
+<#+
+	public string Namespace { get; set; }
+	public string ClassName { get; set; }
+    public string DbEnginePrefix { get; set; }
+
+    #nullable enable
+    public IList<(string SourceName, string TypeName, string? Converter)> Columns { get; set; } = [];
+    #nullable disable
+#>

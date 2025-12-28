@@ -35,6 +35,10 @@
 		  <Generator>TextTemplatingFilePreprocessor</Generator>
 		  <LastGenOutput>TableColumnNameClassTemplate.cs</LastGenOutput>
 		</None>
+		<None Update="Templates\TableSyntaxGeneratorTemplate.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>TableSyntaxGeneratorTemplate.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -47,6 +51,11 @@
 		  <DesignTime>True</DesignTime>
 		  <AutoGen>True</AutoGen>
 		  <DependentUpon>TableColumnNameClassTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\TableSyntaxGeneratorTemplate.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>TableSyntaxGeneratorTemplate.tt</DependentUpon>
 		</Compile>
 	</ItemGroup>
 

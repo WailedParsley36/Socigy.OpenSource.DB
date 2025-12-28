@@ -1,0 +1,6 @@
+{
+  "database": {
+    "migrationNameTemplate": "${D}_${Name}",
+    "platform": "postgresql"
+  }
+}

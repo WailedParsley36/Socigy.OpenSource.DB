@@ -13,5 +13,7 @@ namespace Socigy.OpenSource.DB.Tool.Structures
     {
         public string MigrationNameTemplate { get; set; } = "${D}_${Name}";
         public required string Platform { get; set; }
+
+        public string? DatabaseName { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Socigy.OpenSource.DB.Tool.Generators
         /// </summary>
         /// <param name="diff">The calculated difference between schemas.</param>
         /// <returns>(upSQL[], downSql[])</returns>
-        (IEnumerable<string> Up, IEnumerable<string> Down) Generate(SchemaDiff diff);
+        (IEnumerable<string> Up, IEnumerable<string> Down) Generate(SchemaDiff diff, bool isFirstMigration);
 
         string GetDatabaseType(string csharpType);
     }
