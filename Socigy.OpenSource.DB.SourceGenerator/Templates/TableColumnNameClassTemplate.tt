@@ -4,13 +4,17 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 using Socigy.OpenSource.DB.Core.Interfaces;
+using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core.CommandBuilders;
+
+#nullable enable
 
 namespace <#= Namespace #> 
 {
+    
+    <#= CustomPreClass #>
     public partial class <#= ClassName #> : IDbTable
     {
-        // TODO: Move to the query etc. logic
-        #nullable enable
         protected Dictionary<string, object?> _CustomValues { get; set; }
         public object? GetCustomValue(string key) 
         {
@@ -26,7 +30,6 @@ namespace <#= Namespace #>
             
             return _CustomValues.ContainsKey(key) ? (T?)_CustomValues[key] : default;
         }
-        #nullable disable
 
         public const string TableName = "<#= TableName #>";
         public string GetTableName() => TableName;
@@ -47,6 +50,28 @@ namespace <#= Namespace #>
             };
         }
 
+        public Dictionary<string, ColumnInfo> GetColumns()
+        {
+            return new Dictionary<string, ColumnInfo>()
+            {
+                // TODO: Optimalize the typeof(), or remove if not needed!
+<#
+                foreach(var col in Columns) 
+                {
+#>              {
+                    <#= col.Name #>ColumnName,
+                    new ColumnInfo()
+                    {
+                        Type = typeof(<#= col.Type.Replace("?", " ") #>),
+                        Value = <#= col.Name #>
+                    }
+                },
+<#
+                }
+#>
+            };
+        }
+
 <#
         foreach(var col in Columns) 
         {
@@ -56,7 +81,10 @@ namespace <#= Namespace #>
         }
         #>
     }
+    <#= CustomPostClass #>
 }
+
+#nullable disable
 
 <#+
     public string ClassName { get; set; }
@@ -64,9 +92,13 @@ namespace <#= Namespace #>
     public string Namespace { get; set; }
     public List<ColumnInfo> Columns { get; set; }
 
+    public string CustomPreClass { get; set; } = "";
+    public string CustomPostClass { get; set; } = "";
+
     public class ColumnInfo
     {
         public string Name { get; set; }
+        public string Type { get; set; }
         public string DatabaseName { get; set; }
     }
 #>

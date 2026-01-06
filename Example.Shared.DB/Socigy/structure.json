@@ -1,5 +1,5 @@
 {
-  "id": "20251271236__Initialization",
+  "id": "Initial Migration",
   "tables": [
     {
       "name": "shared",
@@ -11,6 +11,44 @@
           "dotnetType": "System.Guid",
           "databaseType": "uuid",
           "isPrimaryKey": true
+        }
+      ]
+    },
+    {
+      "name": "_scg_migrations",
+      "sourceName": "Example.Shared.DB.Socigy.Generated.SharedDb\u002BMigration",
+      "columns": [
+        {
+          "name": "id",
+          "sourceName": "Id",
+          "dotnetType": "System.Int64",
+          "databaseType": "bigint",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "human_id",
+          "sourceName": "HumanId",
+          "dotnetType": "System.String",
+          "databaseType": "text"
+        },
+        {
+          "name": "applied_at",
+          "sourceName": "AppliedAt",
+          "dotnetType": "System.DateTime",
+          "databaseType": "timestamp without time zone"
+        },
+        {
+          "name": "is_rollback",
+          "sourceName": "IsRollback",
+          "dotnetType": "System.Boolean",
+          "databaseType": "boolean",
+          "defaultValue": "false"
+        },
+        {
+          "name": "executed_by",
+          "sourceName": "ExecutedBy",
+          "dotnetType": "System.String",
+          "databaseType": "text"
         }
       ]
     }

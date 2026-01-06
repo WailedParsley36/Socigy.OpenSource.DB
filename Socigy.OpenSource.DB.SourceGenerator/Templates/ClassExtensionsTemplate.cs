@@ -18,9 +18,9 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public partial class MigrationTableTemplate : MigrationTableTemplateBase
+    public partial class ClassExtensionsTemplate : ClassExtensionsTemplateBase
     {
 #line hidden
         /// <summary>
@@ -28,50 +28,115 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using System;\r\nusing Socigy.OpenSource.DB.Attributes;\r\nusing Socigy.OpenSource.DB" +
-                    ".Migrations;\r\n\r\nnamespace ");
+            this.Write("using Socigy.OpenSource.DB.Core;\r\nusing Socigy.OpenSource.DB.Migrations;\r\nusing S" +
+                    "ocigy.OpenSource.DB.Core.Migrations;\r\nusing Microsoft.AspNetCore.Builder;\r\nusing" +
+                    " Microsoft.Extensions.DependencyInjection;\r\nusing Socigy.OpenSource.DB.");
             
-            #line 10 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+            #line 11 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(".Factory;\r\n\r\nnamespace ");
+            
+            #line 13 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    public static partial class ");
+            this.Write(" \r\n{\r\n    public static partial class BuildExtensions\r\n    {\r\n        public stat" +
+                    "ic WebApplicationBuilder Add");
             
-            #line 12 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DbName));
+            #line 17 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
-            this.Write(@"
-    {
-        [Table(""_scg_migrations"")]
-        public partial class Migration : IMigration
-        {
-            [PrimaryKey]
-            public long Id { get; set; }
+            this.Write("(this WebApplicationBuilder builder)\r\n        {\r\n");
+            
+            #line 19 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
 
-            public string HumanId { get; set; }
+            if (IncludeConnectionFactory) 
+            {
 
-            [Default]
-            public DateTime AppliedAt { get; set; }
+            
+            #line default
+            #line hidden
+            this.Write("            builder.Services.AddKeyedSingleton<IDbConnectionFactory, ");
+            
+            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabasePrefix));
+            
+            #line default
+            #line hidden
+            this.Write("ConnectionFactory>(\"");
+            
+            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("\");\r\n");
+            
+            #line 23 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
 
-            [Default(""false"")]
-            public bool IsRollback { get; set; }
+            }
 
-            public string ExecutedBy { get; set; }
-        }
-    }
-}
-
-");
+            
+            #line default
+            #line hidden
+            this.Write("            builder.Services.AddKeyedSingleton<IMigrationManager, ");
+            
+            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(AssemblyBaseNamespace));
+            
+            #line default
+            #line hidden
+            this.Write(".Socigy.Generated.");
+            
+            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(".MigrationManager>(\"");
+            
+            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("\");\r\n            return builder;\r\n        }\r\n    }\r\n\r\n    public static partial c" +
+                    "lass WebApplicationExtensions\r\n    {\r\n        public static async Task EnsureLat" +
+                    "est");
+            
+            #line 33 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("Migration(this WebApplication app)\r\n        {\r\n            var authMigrationManag" +
+                    "er = app.Services.GetRequiredKeyedService<IMigrationManager>(\"");
+            
+            #line 35 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("\");\r\n            await authMigrationManager.EnsureLatestVersion();\r\n        }\r\n  " +
+                    "  }\r\n}\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 33 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+        #line 41 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+
+    public string DatabaseName { get; set; }
+    public string DatabasePrefix { get; set; }
+    public string AssemblyBaseNamespace { get; set; }
+
+    public bool IncludeConnectionFactory { get; set; }
 
     public string BaseNamespace { get; set; }
-    public string DbName { get; set; }
 
         
         #line default
@@ -85,7 +150,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public class MigrationTableTemplateBase
+    public class ClassExtensionsTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

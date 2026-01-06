@@ -28,7 +28,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
             return string.Join(".", namespaces);
         }
 
-        public static void Execute(SourceProductionContext ctx, Compilation compilation, ImmutableArray<ClassDeclarationSyntax> tables)
+        public static void Execute(SourceProductionContext ctx, Compilation compilation, ImmutableArray<ClassDeclarationSyntax> tables, Program program)
         {
             foreach (var table in tables)
             {
@@ -56,7 +56,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                 {
                     Namespace = tableColNameClassTemplate.Namespace,
                     ClassName = tableColNameClassTemplate.ClassName,
-                    DbEnginePrefix = "Postgresql"
+                    DbEnginePrefix = program.DatabasePrefix
                 };
 
                 foreach (var member in table.Members)
@@ -71,6 +71,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                     var columnInfo = new TableColumnNameClassTemplate.ColumnInfo()
                     {
                         Name = symbolInfo.Name,
+                        Type = symbolInfo.Type.ToDisplayString(),
                         DatabaseName = JsonNamingPolicy.SnakeCaseLower.ConvertName(symbolInfo.Name)
                     };
 

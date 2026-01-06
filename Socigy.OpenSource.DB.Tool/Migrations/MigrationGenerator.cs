@@ -43,15 +43,17 @@ namespace Socigy.OpenSource.DB.Tool.Migrations
                 Environment.Exit(-1);
             }
 
-            migrationName = Configuration.Settings.Database.MigrationNameTemplate.Replace("${Name}", migrationName).Replace("${D}", MigrationNamer.GetMigrationId());
+            migrationName = Configuration.Settings.Database.MigrationNameTemplate.Replace("${Name}", migrationName).Replace("${Timestamp}", MigrationNamer.GetMigrationId());
 #else
 
             string migrationName = MigrationNamer.GenerateUniqueName(diff);
 #endif
-            await File.WriteAllTextAsync($"{Configuration.SocigyMigrationsFolderPath}{migrationName}.g.cs", new MigrationFileTemplate()
+
+            var formattedMigrationName = migrationName.Replace(" ", "_");
+            await File.WriteAllTextAsync($"{Configuration.SocigyMigrationsFolderPath}{formattedMigrationName}.g.cs", new MigrationFileTemplate()
             {
                 Id = migrationName,
-                Name = $"M_{migrationName}",
+                Name = $"M_{formattedMigrationName}",
                 BaseNamespace = $"{Configuration.BaseNamespace}.Socigy.Migrations",
 
                 UpSql = String.Join(Environment.NewLine, upScript),

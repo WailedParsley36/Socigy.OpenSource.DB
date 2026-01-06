@@ -35,32 +35,48 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core;
 using Socigy.OpenSource.DB.Core.Convertors;
 using Socigy.OpenSource.DB.Core.Parsers;
 using Socigy.OpenSource.DB.Core.Parsers.");
             
-            #line 15 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 16 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
             
             #line default
             #line hidden
-            this.Write(";\r\nusing Socigy.OpenSource.DB.Core.Delegates;\r\n\r\nnamespace ");
+            this.Write(";\r\nusing Socigy.OpenSource.DB.Core.Delegates;\r\nusing Socigy.OpenSource.DB.Command" +
+                    "Builders.");
             
             #line 18 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+            
+            #line default
+            #line hidden
+            this.Write(";\r\n\r\n#nullable enable\r\n\r\nnamespace ");
+            
+            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n\tpublic partial class ");
+            this.Write("\r\n{\r\n    ");
             
-            #line 20 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 24 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CustomPreClass));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n\tpublic partial class ");
+            
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write("\r\n\t{\r\n        public static TableQueryBuilder Query(Expression<Func<");
             
-            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 27 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -105,14 +121,14 @@ using Socigy.OpenSource.DB.Core.Parsers.");
 
         public ");
             
-            #line 60 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 65 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write("() {}\r\n        public ");
             
-            #line 61 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 66 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -120,7 +136,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             this.Write("(DbDataReader reader, Dictionary<string, string>? columnOverrides = null)\r\n      " +
                     "  {\r\n        ");
             
-            #line 63 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 68 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
 
             foreach(var column in Columns) 
             {
@@ -133,54 +149,15 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             #line hidden
             this.Write("          ");
             
-            #line 69 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 74 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
             
             #line default
             #line hidden
             this.Write(" = ReadValue<");
             
-            #line 69 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(column.TypeName));
-            
-            #line default
-            #line hidden
-            this.Write(">(reader, \"");
-            
-            #line 69 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
-            
-            #line default
-            #line hidden
-            this.Write("\", columnOverrides);\r\n");
-            
-            #line 70 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
-
-                }
-                else
-                {
-
-            
-            #line default
-            #line hidden
-            this.Write("          ");
-            
-            #line 74 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
-            
-            #line default
-            #line hidden
-            this.Write(" = ReadValueConvertor<");
-            
             #line 74 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.TypeName));
-            
-            #line default
-            #line hidden
-            this.Write(",");
-            
-            #line 74 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(column.Converter));
             
             #line default
             #line hidden
@@ -196,6 +173,45 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             #line 75 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
 
                 }
+                else
+                {
+
+            
+            #line default
+            #line hidden
+            this.Write("          ");
+            
+            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
+            
+            #line default
+            #line hidden
+            this.Write(" = ReadValueConvertor<");
+            
+            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.TypeName));
+            
+            #line default
+            #line hidden
+            this.Write(",");
+            
+            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Converter));
+            
+            #line default
+            #line hidden
+            this.Write(">(reader, \"");
+            
+            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
+            
+            #line default
+            #line hidden
+            this.Write("\", columnOverrides);\r\n");
+            
+            #line 80 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+
+                }
             }
         
             
@@ -203,7 +219,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             #line hidden
             this.Write("        }\r\n\r\n        public static ");
             
-            #line 81 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 86 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -211,131 +227,183 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             this.Write(" ConvertFrom(DbDataReader reader, Dictionary<string, string>? columnOverrides = n" +
                     "ull)\r\n        {\r\n            return new ");
             
-            #line 83 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 88 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(@"(reader, columnOverrides);
+            this.Write("(reader, columnOverrides);\r\n        }\r\n        #endregion\r\n\r\n        public ");
+            
+            #line 92 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+            
+            #line default
+            #line hidden
+            this.Write("InsertCommandBuilder<");
+            
+            #line 92 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write("> Insert()\r\n        {\r\n            return new ");
+            
+            #line 94 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+            
+            #line default
+            #line hidden
+            this.Write("InsertCommandBuilder<");
+            
+            #line 94 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(">(this);\r\n        }\r\n\r\n        public static async Task<bool> InsertAsync(");
+            
+            #line 97 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(" instance, DbConnection connection) \r\n        {\r\n            return await new ");
+            
+            #line 99 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+            
+            #line default
+            #line hidden
+            this.Write("InsertCommandBuilder<");
+            
+            #line 99 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(@">(instance)
+                .WithConnection(connection)
+                .ExecuteAsync();
         }
-        #endregion
 
-        public static Task<bool> InsertAsync()
+        public static UpdateCommandBuilder Update()
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
-        }
-        public static Task<T?> InsertAsyncReturning<T>()
-        {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            return new UpdateCommandBuilder();
         }
 
-        public static async Task<int> UpdateAsync()
+        public static DeleteCommandBuilder Delete()
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            return new DeleteCommandBuilder();
+        }
+        
+        public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
+        {
+            public DeleteCommandBuilder()
+            {
+            }
+
+            public async Task<int> ExecuteAsync()
+            {
+                return 0;
+            }
         }
 
-        public static async Task<bool> DeleteAsync()
+        public class UpdateCommandBuilder : SqlCommandBuilder<UpdateCommandBuilder>
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            public UpdateCommandBuilder()
+            {
+            }
+
+            public async Task<int> ExecuteAsync()
+            {
+                return 0;
+            }
         }
 
-        public struct TableQueryBuilder
+        public class TableQueryBuilder : SqlCommandBuilder<TableQueryBuilder>
         {
-            private DbConnection? _Connection;
-            private DbTransaction? _Transaction;
-            private DbBatch? _Batch;
-
             private Expression<Func<");
             
-            #line 116 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 140 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write(", object?[]>> _SelectClause;\r\n            private Expression<Func<");
             
-            #line 117 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 141 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write(", bool>> _WhereClause;\r\n\r\n            private Expression<Func<");
             
-            #line 119 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 143 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write(", object?[]>>? _OrderByClause;\r\n            private bool _OrderByDescending = fal" +
                     "se;\r\n\r\n            private int _Limit = -1;\r\n            private int _Offset = -" +
-                    "1;\r\n\r\n            public TableQueryBuilder()\r\n            {\r\n            }\r\n\r\n  " +
-                    "          /// <summary>\r\n            /// Associates the specified database trans" +
-                    "action with the query builder instance. Use this or <see cref=\"WithConnection(Db" +
-                    "Connection)\"/> to specify the context for query execution.\r\n            /// </su" +
-                    "mmary>\r\n            /// <remarks>Use this method to ensure that all queries exec" +
-                    "uted by this builder participate in\r\n            /// the provided transaction. T" +
-                    "his is useful for maintaining atomicity across multiple operations.</remarks>\r\n " +
-                    "           /// <exception cref=\"ArgumentNullException\">Thrown if the provided <p" +
-                    "aramref name=\"transaction\"/> is null.</exception>\r\n            /// <exception cr" +
-                    "ef=\"ArgumentException\">Thrown if the provided <paramref name=\"transaction\"/> has" +
-                    " no associated DbConnection.</exception>\r\n            /// <param name=\"transacti" +
-                    "on\">The database transaction to use for subsequent query operations. Cannot be n" +
-                    "ull.</param>\r\n            /// <returns>The current <see cref=\"TableQueryBuilder\"" +
-                    "/> instance with the transaction applied.</returns>\r\n            public TableQue" +
-                    "ryBuilder WithTransaction(DbTransaction transaction)\r\n            {\r\n           " +
-                    "     _Transaction = transaction;\r\n                if (_Transaction == null)\r\n   " +
-                    "                 throw new ArgumentNullException(nameof(transaction));\r\n        " +
-                    "        else if (_Transaction.Connection == null)\r\n                    throw new" +
-                    " ArgumentException(\"The provided transaction has no associated DbConnection.\", n" +
-                    "ameof(transaction));\r\n\r\n                _Connection = _Transaction.Connection;\r\n" +
-                    "\r\n                return this;\r\n            }\r\n\r\n            /// <summary>\r\n    " +
-                    "        /// Sets the database connection to be used for subsequent queries and r" +
-                    "eturns the current builder instance. Use this or <see cref=\"WithTransaction(DbTr" +
-                    "ansaction)\"/> to specify the context for query execution.\"/>\r\n            /// </" +
-                    "summary>\r\n            /// <remarks>This method enables fluent configuration of t" +
-                    "he query builder. The provided\r\n            /// connection will be used for all " +
-                    "future query operations performed by this instance.</remarks>\r\n            /// <" +
-                    "exception cref=\"ArgumentNullException\">Thrown if the provided <paramref name=\"co" +
-                    "nnection\"/> is null.</exception>\r\n            /// <param name=\"connection\">The d" +
-                    "atabase connection to associate with the query builder. Cannot be null.</param>\r" +
-                    "\n            /// <returns>The current <see cref=\"TableQueryBuilder\"/> instance w" +
-                    "ith the specified connection set.</returns>\r\n            public TableQueryBuilde" +
-                    "r WithConnection(DbConnection connection)\r\n            {\r\n                _Conne" +
-                    "ction = connection;\r\n                if (_Connection == null)\r\n                 " +
-                    "   throw new ArgumentNullException(nameof(connection));\r\n\r\n                retur" +
-                    "n this;\r\n            }\r\n\r\n            /// <summary>\r\n            /// Associates " +
-                    "the specified database batch operation with the query builder, enabling batched " +
-                    "execution of user\r\n            /// table queries.\r\n            /// </summary>\r\n " +
-                    "           /// <remarks>Use this method to execute multiple queries as part of a" +
-                    " single batch operation. This\r\n            /// can improve performance and ensur" +
-                    "e atomicity when supported by the underlying database.</remarks>\r\n            //" +
-                    "/ <exception cref=\"ArgumentNullException\">Thrown if the provided <paramref name=" +
-                    "\"batch\"/> is null and Connection/Transaction was not set.</exception>\r\n         " +
-                    "   /// <param name=\"batch\">The database batch to use for executing queries. If n" +
-                    "ull the connection/transaction must be specified!</param>\r\n            /// <retu" +
-                    "rns>The current <see cref=\"TableQueryBuilder\"/> instance with the batch operatio" +
-                    "n applied.</returns>\r\n            public TableQueryBuilder WithBatch(DbBatch? ba" +
-                    "tch)\r\n            {\r\n                if (batch == null)\r\n                {\r\n    " +
-                    "                if (_Connection == null && _Transaction == null)\r\n              " +
-                    "          throw new ArgumentNullException(nameof(batch), \"If batch is null, eith" +
-                    "er connection or transaction must be specified!\");\r\n\r\n                    _Batch" +
-                    " = _Connection?.CreateBatch() ?? _Transaction!.Connection?.CreateBatch() ?? thro" +
-                    "w new InvalidOperationException(\"The provided transaction has no DbConnection fr" +
-                    "om which a DbBatch could be created\");\r\n                    _Batch.Transaction =" +
-                    " _Transaction;\r\n                }\r\n                else\r\n                    _Ba" +
-                    "tch = batch;\r\n\r\n                return this;\r\n            }\r\n\r\n            /// <" +
-                    "summary>\r\n            /// Specifies the columns to select when querying the user" +
-                    " table.\r\n            /// </summary>\r\n            /// <remarks>If not called, all" +
-                    " columns will be selected by default. This method allows for\r\n            /// pr" +
-                    "ojection of only the desired columns, which can improve query performance and re" +
-                    "duce data\r\n            /// transfer.</remarks>\r\n            /// <param name=\"sel" +
-                    "ect\">An expression that defines which properties of the <see cref=\"");
+                    "1;\r\n\r\n            public TableQueryBuilder()\r\n            {\r\n            }\r\n\r\n#i" +
+                    "f NET6_0_OR_GREATER\r\n            protected System.Data.Common.DbBatch? _Batch;\r\n" +
+                    "\r\n            /// <summary>\r\n            /// Specifies the batch to use for subs" +
+                    "equent database operations.\r\n            /// </summary>\r\n            /// <remark" +
+                    "s>If <paramref name=\"batch\"/> is <see langword=\"null\"/>, the method attempts to " +
+                    "create a new\r\n            /// batch from the current connection or transaction. " +
+                    "The batch is used to group multiple database commands for\r\n            /// execu" +
+                    "tion as a single unit.</remarks>\r\n            /// <param name=\"batch\">The <see c" +
+                    "ref=\"DbBatch\"/> instance to associate with the operation, or <see langword=\"null" +
+                    "\"/> to create a new\r\n            /// batch from the current connection or transa" +
+                    "ction.</param>\r\n            /// <returns>The current instance with the specified" +
+                    " batch applied.</returns>\r\n            /// <exception cref=\"ArgumentNullExceptio" +
+                    "n\">Thrown if <paramref name=\"batch\"/> is <see langword=\"null\"/> and neither a co" +
+                    "nnection nor a transaction is\r\n            /// specified.</exception>\r\n         " +
+                    "   /// <exception cref=\"InvalidOperationException\">Thrown if <paramref name=\"bat" +
+                    "ch\"/> is <see langword=\"null\"/> and the provided transaction does not have an\r\n " +
+                    "           /// associated <see cref=\"DbConnection\"/>.</exception>\r\n            p" +
+                    "ublic TableQueryBuilder WithBatch(DbBatch? batch)\r\n            {\r\n              " +
+                    "  if (batch == null)\r\n                {\r\n                    if (_Connection == " +
+                    "null && _Transaction == null)\r\n                        throw new ArgumentNullExc" +
+                    "eption(nameof(batch), \"If batch is null, either connection or transaction must b" +
+                    "e specified!\");\r\n\r\n                    _Batch = _Connection?.CreateBatch() ?? _T" +
+                    "ransaction!.Connection?.CreateBatch() ?? throw new InvalidOperationException(\"Th" +
+                    "e provided transaction has no DbConnection from which a DbBatch could be created" +
+                    "\");\r\n                    _Batch.Transaction = _Transaction;\r\n                }\r\n" +
+                    "                else\r\n                    _Batch = batch;\r\n\r\n                ret" +
+                    "urn this;\r\n            }\r\n\r\n            /// <summary>\r\n            /// Adds a ne" +
+                    "w command to the current batch operation.\r\n            /// </summary>\r\n         " +
+                    "   /// <remarks>This method should be called only after a batch has been initial" +
+                    "ized using\r\n            /// WithBatch(). Attempting to add to a batch without in" +
+                    "itialization will result in an exception.</remarks>\r\n            /// <exception " +
+                    "cref=\"InvalidOperationException\">Thrown if no batch has been provided. Call With" +
+                    "Batch() before invoking this method.</exception>\r\n            public void AddToB" +
+                    "atch()\r\n            {\r\n                if (_Batch == null)\r\n                    " +
+                    "throw new InvalidOperationException(\"Cannot add to batch when no DbBatch was pro" +
+                    "vided. Please call WithBatch() first.\");\r\n\r\n                var batchCommand = _" +
+                    "Batch.CreateBatchCommand();\r\n                _Batch.BatchCommands.Add(batchComma" +
+                    "nd);\r\n            }\r\n\r\n            /// <summary>\r\n            /// Adds a new com" +
+                    "mand to the current database batch asynchronously.\r\n            /// </summary>\r\n" +
+                    "            /// <remarks>This method should be called only after a batch has bee" +
+                    "n initialized using\r\n            /// WithBatch(). It is typically used to accumu" +
+                    "late multiple commands for execution as a single batch\r\n            /// operatio" +
+                    "n.</remarks>\r\n            /// <returns>A task that represents the asynchronous o" +
+                    "peration.</returns>\r\n            /// <exception cref=\"InvalidOperationException\"" +
+                    ">Thrown if no database batch has been provided. Call WithBatch() before invoking" +
+                    " this method.</exception>\r\n            public async Task AddToBatchAsync()\r\n    " +
+                    "        {\r\n                if (_Batch == null)\r\n                    throw new In" +
+                    "validOperationException(\"Cannot add to batch when no DbBatch was provided. Pleas" +
+                    "e call WithBatch() first.\");\r\n\r\n                var batchCommand = _Batch.Create" +
+                    "BatchCommand();\r\n                _Batch.BatchCommands.Add(batchCommand);\r\n      " +
+                    "      }\r\n#endif\r\n\r\n            /// <summary>\r\n            /// Specifies the colu" +
+                    "mns to select when querying the user table.\r\n            /// </summary>\r\n       " +
+                    "     /// <remarks>If not called, all columns will be selected by default. This m" +
+                    "ethod allows for\r\n            /// projection of only the desired columns, which " +
+                    "can improve query performance and reduce data\r\n            /// transfer.</remark" +
+                    "s>\r\n            /// <param name=\"select\">An expression that defines which proper" +
+                    "ties of the <see cref=\"");
             
-            #line 199 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 224 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -345,7 +413,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             /// <returns>The current <see cref=""TableQueryBuilder""/> instance, enabling method chaining.</returns>
             public TableQueryBuilder Select(Expression<Func<");
             
-            #line 202 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 227 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -368,7 +436,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             /// configuration.</returns>
             public TableQueryBuilder Where(Expression<Func<");
             
-            #line 218 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 243 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -412,7 +480,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                     "\n            /// complex queries.</remarks>\r\n            /// <param name=\"clause" +
                     "\">An expression that defines one or more properties of the <see cref=\"");
             
-            #line 272 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 297 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -422,7 +490,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             /// <returns>The current <see cref=""TableQueryBuilder""/> instance with the ordering clause applied.</returns>
             public TableQueryBuilder OrderBy(Expression<Func<");
             
-            #line 275 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 300 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -441,7 +509,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             /// queries.</remarks>
             /// <param name=""clause"">An expression that selects one or more properties of the <see cref=""");
             
-            #line 287 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 312 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -451,41 +519,23 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             /// <returns>The current <see cref=""TableQueryBuilder""/> instance to allow method chaining.</returns>
             public TableQueryBuilder OrderByDesc(Expression<Func<");
             
-            #line 290 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 315 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(", object?[]>> clause)\r\n            {\r\n                _OrderByClause = clause;\r\n " +
-                    "               _OrderByDescending = true;\r\n                return this;\r\n       " +
-                    "     }\r\n\r\n            /// <summary>\r\n            /// Adds a new command to the c" +
-                    "urrent batch operation.\r\n            /// </summary>\r\n            /// <remarks>Th" +
-                    "is method should be called only after a batch has been initialized using\r\n      " +
-                    "      /// WithBatch(). Attempting to add to a batch without initialization will " +
-                    "result in an exception.</remarks>\r\n            /// <exception cref=\"InvalidOpera" +
-                    "tionException\">Thrown if no batch has been provided. Call WithBatch() before inv" +
-                    "oking this method.</exception>\r\n            public void AddToBatch()\r\n          " +
-                    "  {\r\n                if (_Batch == null)\r\n                    throw new InvalidO" +
-                    "perationException(\"Cannot add to batch when no DbBatch was provided. Please call" +
-                    " WithBatch() first.\");\r\n\r\n                var batchCommand = _Batch.CreateBatchC" +
-                    "ommand();\r\n                _Batch.BatchCommands.Add(batchCommand);\r\n            " +
-                    "}\r\n\r\n            /// <summary>\r\n            /// Adds a new command to the curren" +
-                    "t database batch asynchronously.\r\n            /// </summary>\r\n            /// <r" +
-                    "emarks>This method should be called only after a batch has been initialized usin" +
-                    "g\r\n            /// WithBatch(). It is typically used to accumulate multiple comm" +
-                    "ands for execution as a single batch\r\n            /// operation.</remarks>\r\n    " +
-                    "        /// <returns>A task that represents the asynchronous operation.</returns" +
-                    ">\r\n            /// <exception cref=\"InvalidOperationException\">Thrown if no data" +
-                    "base batch has been provided. Call WithBatch() before invoking this method.</exc" +
-                    "eption>\r\n            public async Task AddToBatchAsync()\r\n            {\r\n       " +
-                    "         if (_Batch == null)\r\n                    throw new InvalidOperationExce" +
-                    "ption(\"Cannot add to batch when no DbBatch was provided. Please call WithBatch()" +
-                    " first.\");\r\n\r\n                var batchCommand = _Batch.CreateBatchCommand();\r\n " +
-                    "               _Batch.BatchCommands.Add(batchCommand);\r\n            }\r\n\r\n       " +
-                    "     private ISqlVisitor GetSelectVisitor(ParameterExpression param, GetColumnNa" +
-                    "me getColName, DbCommand command)\r\n            {\r\n                return new ");
+            this.Write(@", object?[]>> clause)
+            {
+                _OrderByClause = clause;
+                _OrderByDescending = true;
+                return this;
+            }
+
+            private ISqlVisitor GetSelectVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command)
+            {
+                return new ");
             
-            #line 331 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 324 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
             
             #line default
@@ -494,7 +544,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                     "ISqlVisitor GetWhereVisitor(ParameterExpression param, GetColumnName getColName," +
                     " DbCommand command)\r\n            {\r\n                return new ");
             
-            #line 336 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 329 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
             
             #line default
@@ -504,7 +554,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                     ", DbCommand command, bool orderByDesc)\r\n            {\r\n                return ne" +
                     "w ");
             
-            #line 341 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 334 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
             
             #line default
@@ -512,7 +562,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             this.Write("OrderByVisitor(param, getColName, command, orderByDesc);\r\n            }\r\n\r\n      " +
                     "      public async IAsyncEnumerable<");
             
-            #line 344 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 337 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -528,18 +578,20 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                     await _Connection.OpenAsync();
 
                 var command = _Connection.CreateCommand();
+                if (_Transaction != null)
+                    command.Transaction = _Transaction;
 
                 Stopwatch watch = Stopwatch.StartNew();
                 var parser = new SqlQueryBuilderExpressionParser<");
             
-            #line 357 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 352 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
             this.Write(">(command, ");
             
-            #line 357 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 352 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -547,7 +599,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             this.Write(".GetColumnDbName, GetSelectVisitor, GetWhereVisitor, GetOrderByVisitor);\r\n       " +
                     "         parser.Process(");
             
-            #line 358 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 353 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -560,6 +612,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
 
                 command.CommandText = parser.ToString();
 
+                // TODO: Move to ILogger loggin rather than Console.WriteLine
                 Console.WriteLine($""[TableQueryBuilder] Executing SQL Query: {command.CommandText} (Prepared in {watch.ElapsedMilliseconds} ms)"");
 
                 using var reader = await command.ExecuteReaderAsync();
@@ -567,20 +620,30 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                 {
                     yield return ");
             
-            #line 371 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            #line 367 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(".ConvertFrom(reader);\r\n                }\r\n            }\r\n        }\r\n\t}\r\n}\r\n\r\n");
+            this.Write(".ConvertFrom(reader);\r\n                }\r\n            }\r\n        }\r\n        ");
+            
+            #line 371 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CustomPostClass));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n\t}\r\n}\r\n\r\n#nullable disable\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 378 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+        #line 377 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
 
 	public string Namespace { get; set; }
 	public string ClassName { get; set; }
     public string DbEnginePrefix { get; set; }
+
+    public string CustomPreClass { get; set; } = "";
+    public string CustomPostClass { get; set; } = "";
 
     #nullable enable
     public IList<(string SourceName, string TypeName, string? Converter)> Columns { get; set; } = [];

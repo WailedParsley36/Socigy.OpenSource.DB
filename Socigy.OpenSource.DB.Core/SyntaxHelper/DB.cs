@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+#nullable enable
 namespace Socigy.OpenSource.DB.Core.SyntaxHelper
 {
     public static class DB
@@ -98,3 +99,4 @@ namespace Socigy.OpenSource.DB.Core.SyntaxHelper
         }
     }
 }
+#nullable disable

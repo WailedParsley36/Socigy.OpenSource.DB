@@ -51,6 +51,9 @@ async Task ExecuteGenerateAsync(ParseResult result)
     bool shouldMigrate = result.GetValue(migrateOpt);
     DirectoryInfo projectDir = result.GetValue(projectDirOpt)!;
 
+    if (Path.GetFileNameWithoutExtension(assemblyPath.FullName).Contains("Socigy.OpenSource.DB"))
+        return;
+
     if (!assemblyPath.Exists)
     {
         Logger.Error($"Assembly not found: {assemblyPath.FullName}");
@@ -60,7 +63,7 @@ async Task ExecuteGenerateAsync(ParseResult result)
     if (shouldMigrate)
         Logger.Warning($"Will generate DB migration script!");
 
-    await Configuration.InitializeAsync(projectDir.FullName);
+    await Configuration.InitializeAsync(projectDir.FullName, assemblyPath);
 
     Stopwatch watch = Stopwatch.StartNew();
     var schema = AssemblyAnalyzer.LoadAndAnalyze(assemblyPath);

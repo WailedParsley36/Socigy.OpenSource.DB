@@ -1,15 +1,7 @@
-﻿using Example.Auth.DB.Socigy.Generated;
-using Example.Shared.DB;
-using Socigy.OpenSource.DB.Attributes;
-using Socigy.OpenSource.DB.Core.Interfaces;
+﻿using Socigy.OpenSource.DB.Attributes;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Example.Auth.DB
 {
@@ -84,27 +76,4 @@ namespace Example.Auth.DB
         public Guid UserId { get; set; }
         public Guid CourseId { get; set; }
     }
-
-    //public interface IDbValueConvertor<T>
-    //{
-    //    public T? ConvertFromDbValue(object? value);
-    //    public object? ConvertToDbValue(T? value);
-    //}
-
-    //public class NumberToEnumConverter<T> : IDbValueConvertor<T>
-    //    where T : Enum
-    //{
-    //    T? IDbValueConvertor<T>.ConvertFromDbValue(object? value)
-    //    {
-    //        if (value == DBNull.Value)
-    //            return default;
-
-    //        return default;
-    //    }
-
-    //    object? IDbValueConvertor<T>.ConvertToDbValue(T? value)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 }

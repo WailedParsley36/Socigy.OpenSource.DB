@@ -1,3 +1,4 @@
 *.dirty.json
 *.diff.json
 diff.json
+*.backup.json

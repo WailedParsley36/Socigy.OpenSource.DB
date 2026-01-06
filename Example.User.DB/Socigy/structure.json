@@ -1,5 +1,5 @@
 {
-  "id": "2025127117__Changes",
+  "id": "Initial Migration",
   "tables": [
     {
       "name": "user_login",
@@ -44,6 +44,44 @@
           "columns": [
             "Email"
           ]
+        }
+      ]
+    },
+    {
+      "name": "_scg_migrations",
+      "sourceName": "Example.User.DB.Socigy.Generated.UserDb\u002BMigration",
+      "columns": [
+        {
+          "name": "id",
+          "sourceName": "Id",
+          "dotnetType": "System.Int64",
+          "databaseType": "bigint",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "human_id",
+          "sourceName": "HumanId",
+          "dotnetType": "System.String",
+          "databaseType": "text"
+        },
+        {
+          "name": "applied_at",
+          "sourceName": "AppliedAt",
+          "dotnetType": "System.DateTime",
+          "databaseType": "timestamp without time zone"
+        },
+        {
+          "name": "is_rollback",
+          "sourceName": "IsRollback",
+          "dotnetType": "System.Boolean",
+          "databaseType": "boolean",
+          "defaultValue": "false"
+        },
+        {
+          "name": "executed_by",
+          "sourceName": "ExecutedBy",
+          "dotnetType": "System.String",
+          "databaseType": "text"
         }
       ]
     }

@@ -18,7 +18,7 @@ namespace Socigy.OpenSource.DB.Tool.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
     public partial class MigrationFileTemplate : MigrationFileTemplateBase
     {
@@ -32,51 +32,51 @@ namespace Socigy.OpenSource.DB.Tool.Templates
                     "ons;\r\n\r\n/*\r\n    This code was generated using Socigy.OpenSource.DB generation to" +
                     "ol at ");
             
-            #line 11 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 11 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.UtcNow.ToString()));
             
             #line default
             #line hidden
             this.Write(" by ");
             
-            #line 11 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 11 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(GitHelper.GetGitSignature(Configuration.ProjectDir)));
             
             #line default
             #line hidden
             this.Write("\r\n*/\r\n\r\nnamespace ");
             
-            #line 14 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 14 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [GeneratedCode(\"Socigy.OpenSource.DB\", \"");
             
-            #line 16 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 16 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).ProductVersion));
             
             #line default
             #line hidden
             this.Write("\")]\r\n    public class ");
             
-            #line 17 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 17 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Name));
             
             #line default
             #line hidden
-            this.Write(" : IMigration\r\n    {\r\n        public string Id => _Id;\r\n\r\n        public string U" +
-                    "pSql => _UpSql;\r\n        public string DownSql => _DownSql;\r\n\r\n        public co" +
-                    "nst string _Id = \"");
+            this.Write(" : ILocalMigration\r\n    {\r\n        public string Id => _Id;\r\n\r\n        public str" +
+                    "ing UpSql => _UpSql;\r\n        public string DownSql => _DownSql;\r\n\r\n        publ" +
+                    "ic const string _Id = \"");
             
-            #line 24 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 24 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Id));
             
             #line default
             #line hidden
             this.Write("\";\r\n        ");
             
-            #line 25 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
 
             if(PreviousId != null) 
             {
@@ -86,14 +86,14 @@ namespace Socigy.OpenSource.DB.Tool.Templates
             #line hidden
             this.Write("        public const string _PreviousId = \"");
             
-            #line 29 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 29 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(PreviousId));
             
             #line default
             #line hidden
             this.Write("\";\r\n        public string PreviousId => _PreviousId;\r\n");
             
-            #line 31 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 31 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
 
             }
             else 
@@ -105,7 +105,7 @@ namespace Socigy.OpenSource.DB.Tool.Templates
             this.Write("#nullable enable\r\n        public string? PreviousId => null;\r\n        #nullable d" +
                     "isable\r\n");
             
-            #line 39 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 39 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
 
             }
         
@@ -114,14 +114,14 @@ namespace Socigy.OpenSource.DB.Tool.Templates
             #line hidden
             this.Write("\r\npublic const string _UpSql = \"\"\"\r\n");
             
-            #line 44 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 44 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(UpSql));
             
             #line default
             #line hidden
             this.Write("\r\n\"\"\";\r\n        \r\npublic const string _DownSql = \"\"\"\r\n");
             
-            #line 48 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+            #line 48 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DownSql));
             
             #line default
@@ -130,7 +130,7 @@ namespace Socigy.OpenSource.DB.Tool.Templates
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 53 "D:\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
+        #line 53 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
 
     public string BaseNamespace { get; set; }
     public string Name { get; set; }

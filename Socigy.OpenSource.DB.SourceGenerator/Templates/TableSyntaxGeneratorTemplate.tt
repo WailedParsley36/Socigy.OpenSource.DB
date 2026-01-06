@@ -10,13 +10,18 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core;
 using Socigy.OpenSource.DB.Core.Convertors;
 using Socigy.OpenSource.DB.Core.Parsers;
 using Socigy.OpenSource.DB.Core.Parsers.<#= DbEnginePrefix #>;
 using Socigy.OpenSource.DB.Core.Delegates;
+using Socigy.OpenSource.DB.CommandBuilders.<#= DbEnginePrefix #>;
+
+#nullable enable
 
 namespace <#= Namespace #>
 {
+    <#= CustomPreClass #>
 	public partial class <#= ClassName #>
 	{
         public static TableQueryBuilder Query(Expression<Func<<#= ClassName #>, bool>> where)
@@ -84,35 +89,54 @@ namespace <#= Namespace #>
         }
         #endregion
 
-        public static Task<bool> InsertAsync()
+        public <#= DbEnginePrefix #>InsertCommandBuilder<<#= ClassName #>> Insert()
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
-        }
-        public static Task<T?> InsertAsyncReturning<T>()
-        {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            return new <#= DbEnginePrefix #>InsertCommandBuilder<<#= ClassName #>>(this);
         }
 
-        public static async Task<int> UpdateAsync()
+        public static async Task<bool> InsertAsync(<#= ClassName #> instance, DbConnection connection) 
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            return await new <#= DbEnginePrefix #>InsertCommandBuilder<<#= ClassName #>>(instance)
+                .WithConnection(connection)
+                .ExecuteAsync();
         }
 
-        public static async Task<bool> DeleteAsync()
+        public static UpdateCommandBuilder Update()
         {
-            // TODO: Implement conversion logic
-            throw new NotImplementedException();
+            return new UpdateCommandBuilder();
         }
 
-        public struct TableQueryBuilder
+        public static DeleteCommandBuilder Delete()
         {
-            private DbConnection? _Connection;
-            private DbTransaction? _Transaction;
-            private DbBatch? _Batch;
+            return new DeleteCommandBuilder();
+        }
+        
+        public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
+        {
+            public DeleteCommandBuilder()
+            {
+            }
 
+            public async Task<int> ExecuteAsync()
+            {
+                return 0;
+            }
+        }
+
+        public class UpdateCommandBuilder : SqlCommandBuilder<UpdateCommandBuilder>
+        {
+            public UpdateCommandBuilder()
+            {
+            }
+
+            public async Task<int> ExecuteAsync()
+            {
+                return 0;
+            }
+        }
+
+        public class TableQueryBuilder : SqlCommandBuilder<TableQueryBuilder>
+        {
             private Expression<Func<<#= ClassName #>, object?[]>> _SelectClause;
             private Expression<Func<<#= ClassName #>, bool>> _WhereClause;
 
@@ -126,54 +150,22 @@ namespace <#= Namespace #>
             {
             }
 
-            /// <summary>
-            /// Associates the specified database transaction with the query builder instance. Use this or <see cref="WithConnection(DbConnection)"/> to specify the context for query execution.
-            /// </summary>
-            /// <remarks>Use this method to ensure that all queries executed by this builder participate in
-            /// the provided transaction. This is useful for maintaining atomicity across multiple operations.</remarks>
-            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="transaction"/> is null.</exception>
-            /// <exception cref="ArgumentException">Thrown if the provided <paramref name="transaction"/> has no associated DbConnection.</exception>
-            /// <param name="transaction">The database transaction to use for subsequent query operations. Cannot be null.</param>
-            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the transaction applied.</returns>
-            public TableQueryBuilder WithTransaction(DbTransaction transaction)
-            {
-                _Transaction = transaction;
-                if (_Transaction == null)
-                    throw new ArgumentNullException(nameof(transaction));
-                else if (_Transaction.Connection == null)
-                    throw new ArgumentException("The provided transaction has no associated DbConnection.", nameof(transaction));
-
-                _Connection = _Transaction.Connection;
-
-                return this;
-            }
+#if NET6_0_OR_GREATER
+            protected System.Data.Common.DbBatch? _Batch;
 
             /// <summary>
-            /// Sets the database connection to be used for subsequent queries and returns the current builder instance. Use this or <see cref="WithTransaction(DbTransaction)"/> to specify the context for query execution."/>
+            /// Specifies the batch to use for subsequent database operations.
             /// </summary>
-            /// <remarks>This method enables fluent configuration of the query builder. The provided
-            /// connection will be used for all future query operations performed by this instance.</remarks>
-            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="connection"/> is null.</exception>
-            /// <param name="connection">The database connection to associate with the query builder. Cannot be null.</param>
-            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the specified connection set.</returns>
-            public TableQueryBuilder WithConnection(DbConnection connection)
-            {
-                _Connection = connection;
-                if (_Connection == null)
-                    throw new ArgumentNullException(nameof(connection));
-
-                return this;
-            }
-
-            /// <summary>
-            /// Associates the specified database batch operation with the query builder, enabling batched execution of user
-            /// table queries.
-            /// </summary>
-            /// <remarks>Use this method to execute multiple queries as part of a single batch operation. This
-            /// can improve performance and ensure atomicity when supported by the underlying database.</remarks>
-            /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="batch"/> is null and Connection/Transaction was not set.</exception>
-            /// <param name="batch">The database batch to use for executing queries. If null the connection/transaction must be specified!</param>
-            /// <returns>The current <see cref="TableQueryBuilder"/> instance with the batch operation applied.</returns>
+            /// <remarks>If <paramref name="batch"/> is <see langword="null"/>, the method attempts to create a new
+            /// batch from the current connection or transaction. The batch is used to group multiple database commands for
+            /// execution as a single unit.</remarks>
+            /// <param name="batch">The <see cref="DbBatch"/> instance to associate with the operation, or <see langword="null"/> to create a new
+            /// batch from the current connection or transaction.</param>
+            /// <returns>The current instance with the specified batch applied.</returns>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="batch"/> is <see langword="null"/> and neither a connection nor a transaction is
+            /// specified.</exception>
+            /// <exception cref="InvalidOperationException">Thrown if <paramref name="batch"/> is <see langword="null"/> and the provided transaction does not have an
+            /// associated <see cref="DbConnection"/>.</exception>
             public TableQueryBuilder WithBatch(DbBatch? batch)
             {
                 if (batch == null)
@@ -189,6 +181,39 @@ namespace <#= Namespace #>
 
                 return this;
             }
+
+            /// <summary>
+            /// Adds a new command to the current batch operation.
+            /// </summary>
+            /// <remarks>This method should be called only after a batch has been initialized using
+            /// WithBatch(). Attempting to add to a batch without initialization will result in an exception.</remarks>
+            /// <exception cref="InvalidOperationException">Thrown if no batch has been provided. Call WithBatch() before invoking this method.</exception>
+            public void AddToBatch()
+            {
+                if (_Batch == null)
+                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+                var batchCommand = _Batch.CreateBatchCommand();
+                _Batch.BatchCommands.Add(batchCommand);
+            }
+
+            /// <summary>
+            /// Adds a new command to the current database batch asynchronously.
+            /// </summary>
+            /// <remarks>This method should be called only after a batch has been initialized using
+            /// WithBatch(). It is typically used to accumulate multiple commands for execution as a single batch
+            /// operation.</remarks>
+            /// <returns>A task that represents the asynchronous operation.</returns>
+            /// <exception cref="InvalidOperationException">Thrown if no database batch has been provided. Call WithBatch() before invoking this method.</exception>
+            public async Task AddToBatchAsync()
+            {
+                if (_Batch == null)
+                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+                var batchCommand = _Batch.CreateBatchCommand();
+                _Batch.BatchCommands.Add(batchCommand);
+            }
+#endif
 
             /// <summary>
             /// Specifies the columns to select when querying the user table.
@@ -294,38 +319,6 @@ namespace <#= Namespace #>
                 return this;
             }
 
-            /// <summary>
-            /// Adds a new command to the current batch operation.
-            /// </summary>
-            /// <remarks>This method should be called only after a batch has been initialized using
-            /// WithBatch(). Attempting to add to a batch without initialization will result in an exception.</remarks>
-            /// <exception cref="InvalidOperationException">Thrown if no batch has been provided. Call WithBatch() before invoking this method.</exception>
-            public void AddToBatch()
-            {
-                if (_Batch == null)
-                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
-
-                var batchCommand = _Batch.CreateBatchCommand();
-                _Batch.BatchCommands.Add(batchCommand);
-            }
-
-            /// <summary>
-            /// Adds a new command to the current database batch asynchronously.
-            /// </summary>
-            /// <remarks>This method should be called only after a batch has been initialized using
-            /// WithBatch(). It is typically used to accumulate multiple commands for execution as a single batch
-            /// operation.</remarks>
-            /// <returns>A task that represents the asynchronous operation.</returns>
-            /// <exception cref="InvalidOperationException">Thrown if no database batch has been provided. Call WithBatch() before invoking this method.</exception>
-            public async Task AddToBatchAsync()
-            {
-                if (_Batch == null)
-                    throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
-
-                var batchCommand = _Batch.CreateBatchCommand();
-                _Batch.BatchCommands.Add(batchCommand);
-            }
-
             private ISqlVisitor GetSelectVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command)
             {
                 return new <#= DbEnginePrefix #>SelectVisitor(param, getColName, command);
@@ -352,6 +345,8 @@ namespace <#= Namespace #>
                     await _Connection.OpenAsync();
 
                 var command = _Connection.CreateCommand();
+                if (_Transaction != null)
+                    command.Transaction = _Transaction;
 
                 Stopwatch watch = Stopwatch.StartNew();
                 var parser = new SqlQueryBuilderExpressionParser<<#= ClassName #>>(command, <#= ClassName #>.GetColumnDbName, GetSelectVisitor, GetWhereVisitor, GetOrderByVisitor);
@@ -363,6 +358,7 @@ namespace <#= Namespace #>
 
                 command.CommandText = parser.ToString();
 
+                // TODO: Move to ILogger loggin rather than Console.WriteLine
                 Console.WriteLine($"[TableQueryBuilder] Executing SQL Query: {command.CommandText} (Prepared in {watch.ElapsedMilliseconds} ms)");
 
                 using var reader = await command.ExecuteReaderAsync();
@@ -372,13 +368,19 @@ namespace <#= Namespace #>
                 }
             }
         }
+        <#= CustomPostClass #>
 	}
 }
+
+#nullable disable
 
 <#+
 	public string Namespace { get; set; }
 	public string ClassName { get; set; }
     public string DbEnginePrefix { get; set; }
+
+    public string CustomPreClass { get; set; } = "";
+    public string CustomPostClass { get; set; } = "";
 
     #nullable enable
     public IList<(string SourceName, string TypeName, string? Converter)> Columns { get; set; } = [];

@@ -1,4 +1,5 @@
-﻿using Socigy.OpenSource.DB.Tool.Structures.Analysis;
+﻿using Socigy.OpenSource.DB.Core.Settings;
+using Socigy.OpenSource.DB.Tool.Structures.Analysis;
 using System;
 using System.Collections.Generic;
 using System.Text;

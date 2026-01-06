@@ -1,5 +1,6 @@
 {
   "database": {
-    "platform": "postgresql"
+    "platform": "postgresql",
+    "databaseName": "UserDb"
   }
 }

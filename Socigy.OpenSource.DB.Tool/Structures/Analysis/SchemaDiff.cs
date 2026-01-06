@@ -77,6 +77,7 @@ namespace Socigy.OpenSource.DB.Tool.Structures.Analysis
 
         public void ClearOutEmpty()
         {
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             if (AddedColumns?.Count == 0) AddedColumns = null;
             if (RemovedColumns?.Count == 0) RemovedColumns = null;
             if (ModifiedColumns?.Count == 0) ModifiedColumns = null;
@@ -88,6 +89,7 @@ namespace Socigy.OpenSource.DB.Tool.Structures.Analysis
             if (RawAddedRows?.Count == 0) RawAddedRows = null;
             if (RawRemovedRows?.Count == 0) RawRemovedRows = null;
             if (ModifiedRows?.Count == 0) ModifiedRows = null;
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         public void ProvideDefaults()

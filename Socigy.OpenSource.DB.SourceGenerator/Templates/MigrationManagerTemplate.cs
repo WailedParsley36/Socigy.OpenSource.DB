@@ -18,9 +18,9 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public partial class MigrationTableTemplate : MigrationTableTemplateBase
+    public partial class MigrationManagerTemplate : MigrationManagerTemplateBase
     {
 #line hidden
         /// <summary>
@@ -28,50 +28,223 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using System;\r\nusing Socigy.OpenSource.DB.Attributes;\r\nusing Socigy.OpenSource.DB" +
-                    ".Migrations;\r\n\r\nnamespace ");
+            this.Write("using Microsoft.Extensions.DependencyInjection;\r\nusing Microsoft.Extensions.Loggi" +
+                    "ng;\r\nusing Socigy.OpenSource.DB.Core.Migrations;\r\nusing Socigy.OpenSource.DB.Cor" +
+                    "e;\r\nusing Socigy.OpenSource.DB.Migrations;\r\n\r\n#nullable enable\r\n\r\nnamespace ");
             
-            #line 10 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+            #line 14 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    public static partial class ");
             
-            #line 12 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DbName));
+            #line 16 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
-            this.Write(@"
-    {
-        [Table(""_scg_migrations"")]
-        public partial class Migration : IMigration
-        {
-            [PrimaryKey]
-            public long Id { get; set; }
+            this.Write("\r\n    {\r\n        public class MigrationManager : IMigrationManager\r\n        {\r\n  " +
+                    "          private static readonly List<ILocalMigration> _localMigrationsOrderedD" +
+                    "esc =\r\n            [\r\n    ");
+            
+            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
 
-            public string HumanId { get; set; }
+                foreach (var migrationName in MigrationClassNames) 
+                {
+    
+            
+            #line default
+            #line hidden
+            this.Write("          new ");
+            
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(migrationName));
+            
+            #line default
+            #line hidden
+            this.Write("(),\r\n    ");
+            
+            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
 
-            [Default]
-            public DateTime AppliedAt { get; set; }
+                }
+    
+            
+            #line default
+            #line hidden
+            this.Write(@"            ];
 
-            [Default(""false"")]
-            public bool IsRollback { get; set; }
+            private Dictionary<string, ILocalMigration> _localMigrations = _localMigrationsOrderedDesc.ToDictionary(static x => x.Id, static x => x);
+            public Dictionary<string, ILocalMigration> LocalMigrations => _localMigrations;
 
-            public string ExecutedBy { get; set; }
+
+            private readonly ILogger _Logger;
+            private readonly IDbConnectionFactory _ConnectionFactory;
+            public MigrationManager(ILogger<MigrationManager> logger, [FromKeyedServices(""");
+            
+            #line 37 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("\")] IDbConnectionFactory connectionFactory)\r\n            {\r\n                _Logg" +
+                    "er = logger;\r\n                _ConnectionFactory = connectionFactory;\r\n         " +
+                    "   }\r\n\r\n            public Task EnsureLatestVersion()\r\n            {\r\n          " +
+                    "      return EnsureMigration(_localMigrationsOrderedDesc.First());\r\n            " +
+                    "}\r\n            public Task EnsureMigration(string migrationId)\r\n            {\r\n " +
+                    "               if (!_localMigrations.TryGetValue(migrationId, out ILocalMigratio" +
+                    "n? migration))\r\n                    throw new MissingMemberException($\"Missing l" +
+                    "ocal migration with ID {migrationId}\"); \r\n\r\n                return EnsureMigrati" +
+                    "on(migration);\r\n            }\r\n            public async Task EnsureMigration(ILo" +
+                    "calMigration migration)\r\n            {\r\n                await _ConnectionFactory" +
+                    ".EnsureDbExists();\r\n\r\n                var dbVersion = await GetCurrentMigrationV" +
+                    "ersion();\r\n                int sourceMigrationIndex = -1;\r\n                int t" +
+                    "argetMigrationIndex = -1;\r\n\r\n                if (dbVersion == null)\r\n           " +
+                    "         sourceMigrationIndex = _localMigrationsOrderedDesc.Count;\r\n            " +
+                    "    else \r\n                {\r\n                    sourceMigrationIndex = _localM" +
+                    "igrationsOrderedDesc.FindIndex(x => x.Id == dbVersion.HumanId);\r\n               " +
+                    "     if (sourceMigrationIndex < 0)\r\n                    {\r\n                     " +
+                    "   throw new InvalidDataException($\"Unable to find local migration with ID {dbVe" +
+                    "rsion.HumanId} that is in the Database. Aborting!\");\r\n                    }\r\n   " +
+                    "             }\r\n\r\n                targetMigrationIndex = _localMigrationsOrdered" +
+                    "Desc.FindIndex(x => x.Id == migration.Id);\r\n                if (targetMigrationI" +
+                    "ndex < 0) throw new InvalidDataException($\"Target migration {migration.Id} not f" +
+                    "ound locally.\");\r\n\r\n\r\n                if (sourceMigrationIndex == targetMigratio" +
+                    "nIndex)\r\n                {\r\n                    _Logger.LogInformation($\"");
+            
+            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(@" is already at version: {migration.Id}"");
+                    return;
+                }
+
+                using var connection = _ConnectionFactory.Create();
+                await connection.OpenAsync();
+
+                if (sourceMigrationIndex > targetMigrationIndex)
+                {
+                    for (int i = sourceMigrationIndex - 1; i >= targetMigrationIndex; i--)
+                    {
+                        var migToApply = _localMigrationsOrderedDesc[i];
+                        _Logger.LogInformation($""Applying UP migration: {migToApply.Id} - {migToApply.GetType().Name}"");
+
+                        using var command = connection.CreateCommand();
+                        command.CommandText = migToApply.UpSql;
+                        await command.ExecuteNonQueryAsync();
+
+                        // Record the migration
+                        await ");
+            
+            #line 98 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(".Migration.InsertAsync(new ");
+            
+            #line 98 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(@".Migration
+                        {
+                            HumanId = migToApply.Id,
+                            AppliedAt = DateTime.UtcNow,
+                            ExecutedBy = $""{Environment.UserName} - {Environment.MachineName}"",
+                            IsRollback = false
+                        }, connection);
+                    }
+                }
+                else
+                {
+                    for (int i = sourceMigrationIndex; i < targetMigrationIndex; i++)
+                    {
+                        var migToApply = _localMigrationsOrderedDesc[i];
+                        _Logger.LogInformation($""Applying DOWN migration: {migToApply.Id} - {migToApply.GetType().Name}"");
+
+                        using var command = connection.CreateCommand();
+                        command.CommandText = migToApply.DownSql;
+                        await command.ExecuteNonQueryAsync();
+
+                        // Record the rollback
+                        await ");
+            
+            #line 119 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(".Migration.InsertAsync(new ");
+            
+            #line 119 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(@".Migration
+                        {
+                            HumanId = migToApply.Id,
+                            AppliedAt = DateTime.UtcNow,
+                            ExecutedBy = $""{Environment.UserName} - {Environment.MachineName}"",
+                            IsRollback = true
+                        }, connection);
+                    }
+                }
+            }
+
+            public async Task<ILocalMigration?> GetCurrentLocalMigrationVersion()
+            {
+                var latestVersion = await GetCurrentMigrationVersion();
+                if (latestVersion == null || !_localMigrations.TryGetValue(latestVersion.HumanId, out var result))
+                    return null;
+
+                return result;
+            }
+
+            public async Task<IMigration?> GetCurrentMigrationVersion()
+            {
+                try 
+                {
+                    using var connection = _ConnectionFactory.Create();
+
+                    var versions = ");
+            
+            #line 145 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write(@".Migration.Query()
+                        .WithConnection(connection)
+                        .OrderByDesc(x => new object[] { x.AppliedAt })
+                        .ExecuteAsync();
+
+                    return await versions.FirstAsync();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
     }
 }
+
+#nullable disable
 
 ");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 33 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+        #line 163 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
 
+    public string DatabaseName { get; set; }
     public string BaseNamespace { get; set; }
-    public string DbName { get; set; }
+    public IList<string> MigrationClassNames { get; set; } = [];
 
         
         #line default
@@ -85,7 +258,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public class MigrationTableTemplateBase
+    public class MigrationManagerTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

@@ -19,7 +19,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
 		<PackageReference Include="System.CodeDom" Version="10.0.0" GeneratePathProperty="true" PrivateAssets="All" />
-		<PackageReference Include="System.Text.Json" Version="10.0.0" GeneratePathProperty="true" PrivateAssets="All" />
+		<PackageReference Include="System.Text.Json" Version="10.0.1" GeneratePathProperty="true" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -27,6 +27,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Templates\ClassExtensionsTemplate.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>ClassExtensionsTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="Templates\CommandBuilders\PostgresqlInsertCommandBuilder.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>PostgresqlInsertCommandBuilder.cs</LastGenOutput>
+		</None>
+		<None Update="Templates\DbConnectionFactoryTemplate.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>DbConnectionFactoryTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="Templates\MigrationManagerTemplate.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>MigrationManagerTemplate.cs</LastGenOutput>
+		</None>
 		<None Update="Templates\MigrationTableTemplate.tt">
 			<Generator>TextTemplatingFilePreprocessor</Generator>
 			<LastGenOutput>MigrationTableTemplate.cs</LastGenOutput>
@@ -42,6 +58,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Templates\ClassExtensionsTemplate.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>ClassExtensionsTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\CommandBuilders\PostgresqlInsertCommandBuilder.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>PostgresqlInsertCommandBuilder.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\DbConnectionFactoryTemplate.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>DbConnectionFactoryTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\MigrationManagerTemplate.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>MigrationManagerTemplate.tt</DependentUpon>
+		</Compile>
 		<Compile Update="Templates\MigrationTableTemplate.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>

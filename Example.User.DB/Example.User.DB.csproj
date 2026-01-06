@@ -5,10 +5,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;DB_Migration</Configurations>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Socigy.OpenSource.DB" Version="0.0.25" />
+		<PackageReference Include="Npgsql" Version="10.0.1" />
+		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.25" />
 	</ItemGroup>
 
 </Project>
+

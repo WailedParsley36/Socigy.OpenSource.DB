@@ -5,27 +5,32 @@
 <#@ import namespace="System.Collections.Generic" #>
 using System;
 using Socigy.OpenSource.DB.Attributes;
+using Socigy.OpenSource.DB.Migrations;
 
 namespace <#= BaseNamespace #>
 {
-    [Table("_scg_migrations")]
-    public partial class Migrations
+    public static partial class <#= DbName #>
     {
-        [PrimaryKey]
-        public long Id { get; set; }
+        [Table("_scg_migrations")]
+        public partial class Migration : IMigration
+        {
+            [PrimaryKey]
+            public long Id { get; set; }
 
-        public string HumanId { get; set; }
-    
-        [Default]
-        public DateTime AppliedAt { get; set; }
+            public string HumanId { get; set; }
 
-        [Default("false")]
-        public bool IsRollback { get; set; }
+            [Default]
+            public DateTime AppliedAt { get; set; }
 
-        public string ExecutedBy { get; set; }
+            [Default("false")]
+            public bool IsRollback { get; set; }
+
+            public string ExecutedBy { get; set; }
+        }
     }
 }
 
 <#+
     public string BaseNamespace { get; set; }
+    public string DbName { get; set; }
 #>

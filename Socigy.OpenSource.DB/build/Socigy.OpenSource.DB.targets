@@ -1,4 +1,13 @@
 <Project>
+	<ItemGroup>
+		<AdditionalFiles Include="$(MSBuildProjectDirectory)\socigy.json"
+						 Condition="Exists('$(MSBuildProjectDirectory)\socigy.json')" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<IsMigrationBuild Condition="('$(DbMigration)' == 'true' OR '$(Mode)' == 'DbMigration' OR '$(Configuration)' == 'DB_MIGRATION') AND '$(IsSecondPass)' != 'true'">true</IsMigrationBuild>
 		<SocigyMigrateArg Condition="'$(IsMigrationBuild)' == 'true'">--migrate</SocigyMigrateArg>

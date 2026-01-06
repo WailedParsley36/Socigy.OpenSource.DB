@@ -1,0 +1,175 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System;
+using System.Text;
+using System.Data.Common;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.Core.CommandBuilders;
+using Socigy.OpenSource.DB.Core.Interfaces;
+
+#nullable enable
+
+namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
+{
+    public class PostgresqlInsertCommandBuilder<T> : SqlCommandBuilder<PostgresqlInsertCommandBuilder<T>>
+        where T : IDbTable
+    {
+#if NET6_0_OR_GREATER
+        protected System.Data.Common.DbBatch? _Batch;
+
+        /// <summary>
+        /// Specifies the batch to use for subsequent database operations.
+        /// </summary>
+        /// <remarks>If <paramref name="batch"/> is <see langword="null"/>, the method attempts to create a new
+        /// batch from the current connection or transaction. The batch is used to group multiple database commands for
+        /// execution as a single unit.</remarks>
+        /// <param name="batch">The <see cref="DbBatch"/> instance to associate with the operation, or <see langword="null"/> to create a new
+        /// batch from the current connection or transaction.</param>
+        /// <returns>The current instance with the specified batch applied.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="batch"/> is <see langword="null"/> and neither a connection nor a transaction is
+        /// specified.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if <paramref name="batch"/> is <see langword="null"/> and the provided transaction does not have an
+        /// associated <see cref="DbConnection"/>.</exception>
+        public PostgresqlInsertCommandBuilder<T> WithBatch(DbBatch? batch)
+        {
+            if (batch == null)
+            {
+                if (_Connection == null && _Transaction == null)
+                    throw new ArgumentNullException(nameof(batch), "If batch is null, either connection or transaction must be specified!");
+
+                _Batch = _Connection?.CreateBatch() ?? _Transaction!.Connection?.CreateBatch() ?? throw new InvalidOperationException("The provided transaction has no DbConnection from which a DbBatch could be created");
+                _Batch.Transaction = _Transaction;
+            }
+            else
+                _Batch = batch;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new command to the current batch operation.
+        /// </summary>
+        /// <remarks>This method should be called only after a batch has been initialized using
+        /// WithBatch(). Attempting to add to a batch without initialization will result in an exception.</remarks>
+        /// <exception cref="InvalidOperationException">Thrown if no batch has been provided. Call WithBatch() before invoking this method.</exception>
+        public void AddToBatch()
+        {
+            if (_Batch == null)
+                throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+            var batchCommand = _Batch.CreateBatchCommand();
+            _Batch.BatchCommands.Add(batchCommand);
+        }
+
+        /// <summary>
+        /// Adds a new command to the current database batch asynchronously.
+        /// </summary>
+        /// <remarks>This method should be called only after a batch has been initialized using
+        /// WithBatch(). It is typically used to accumulate multiple commands for execution as a single batch
+        /// operation.</remarks>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if no database batch has been provided. Call WithBatch() before invoking this method.</exception>
+        public async Task AddToBatchAsync()
+        {
+            if (_Batch == null)
+                throw new InvalidOperationException("Cannot add to batch when no DbBatch was provided. Please call WithBatch() first.");
+
+            var batchCommand = _Batch.CreateBatchCommand();
+            _Batch.BatchCommands.Add(batchCommand);
+        }
+#endif
+
+        private readonly T _TableRow;
+        private Dictionary<string, ColumnInfo>? _ColumnInfo;
+
+        public PostgresqlInsertCommandBuilder(T rowInstance, Dictionary<string, ColumnInfo>? columnInfo = null)
+        {
+            _TableRow = rowInstance;
+            _ColumnInfo = columnInfo;
+        }
+
+        /// <summary>
+        /// Sets the column metadata to be used for building the PostgreSQL insert command.
+        /// </summary>
+        /// <param name="columnInfo">A dictionary mapping column names to their associated metadata. Cannot be null.</param>
+        /// <returns>The current instance of <see cref="PostgresqlInsertCommandBuilder{T}"/> with updated column information.</returns>
+        public PostgresqlInsertCommandBuilder<T> WithColumnInfo(Dictionary<string, ColumnInfo> columnInfo)
+        {
+            _ColumnInfo = columnInfo;
+            return this;
+        }
+
+        // TODO: Implement ExecuteReturningAsync
+        public async Task<TReturning?> ExecuteReturningAsync<TReturning>()
+        {
+            // TODO: Automatic Sequence value insertion
+            throw new NotImplementedException();
+            return default;
+        }
+
+        // TODO: Automatic Sequence value insertion
+        /// <summary>
+        /// Executes the configured INSERT command asynchronously against the database connection.
+        /// </summary>
+        /// <remarks>The method requires a valid and open database connection. If a transaction is
+        /// configured, the command will execute within that transaction. Ensure that the connection and table row are
+        /// properly set up before calling this method.</remarks>
+        /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if one or more
+        /// rows were inserted; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if a batch operation is configured or if no database connection has been provided.</exception>
+        public async Task<bool> ExecuteAsync()
+        {
+#if NET6_0_OR_GREATER
+            if (_Batch != null)
+                throw new InvalidOperationException("Cannot execute command, when DbBatch was provided. Please call AddToBatchAsync()");
+            else 
+#endif
+            if (_Connection == null)
+                throw new InvalidOperationException("Cannot execute command, when no DbConnection was provided. Please call WithConnection()/WithTransaction() first");
+
+            if (_Connection.State != System.Data.ConnectionState.Open)
+                await _Connection.OpenAsync();
+
+            var command = _Connection.CreateCommand();
+            if (_Transaction != null)
+                command.Transaction = _Transaction;
+
+            // INSERT INTO {_TableRow.GetTableName()}(name1, name2, name3) VALUES(val1, val2, val3)
+
+            StringBuilder main = new($"INSERT INTO \"{_TableRow.GetTableName()}\"(");
+            StringBuilder values = new();
+
+            _ColumnInfo ??= _TableRow.GetColumns();
+            foreach (var row in _ColumnInfo)
+            {
+                main.Append($"{row.Key}, ");
+
+                // We don't need to worry about suplementing the value type to the DbParameter
+                if (row.Value.Value == null || row.Value.Value == DBNull.Value)
+                {
+                    values.AppendLine("NULL, ");
+                    continue;
+                }
+
+                var param = command.CreateParameter();
+                param.ParameterName = row.Key;
+                param.Value = row.Value;
+                command.Parameters.Add(param);
+
+                values.AppendLine($"@{row.Key}, ");
+            }
+
+            command.CommandText = $"{main.ToString().TrimEnd([' ', ','])}) VALUES({values.ToString().TrimEnd([' ', ','])})";
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+        }
+    }
+}
+
+#nullable disable

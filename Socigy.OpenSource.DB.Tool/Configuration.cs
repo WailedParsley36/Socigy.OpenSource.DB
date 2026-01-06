@@ -1,4 +1,5 @@
-﻿using Socigy.OpenSource.DB.Tool.Generators;
+﻿using Socigy.OpenSource.DB.Core.Settings;
+using Socigy.OpenSource.DB.Tool.Generators;
 using Socigy.OpenSource.DB.Tool.Structures;
 using Socigy.OpenSource.DB.Tool.Structures.Analysis;
 using Socigy.OpenSource.DB.Tool.Templates;
@@ -8,6 +9,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Socigy.OpenSource.DB.Tool
 {
@@ -36,7 +39,7 @@ namespace Socigy.OpenSource.DB.Tool
         public static string SocigyConfigFilePath => $"{ProjectDir}\\socigy.json";
 
         public static string BaseNamespace { get; set; }
-        public static async Task InitializeAsync(string projectDir)
+        public static async Task InitializeAsync(string projectDir, FileInfo assemblyInfo)
         {
             ProjectDir = projectDir;
 

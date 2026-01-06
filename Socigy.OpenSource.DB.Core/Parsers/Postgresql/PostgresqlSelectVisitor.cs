@@ -8,6 +8,7 @@ using static Socigy.OpenSource.DB.Core.SyntaxHelper.DB;
 
 namespace Socigy.OpenSource.DB.Core.Parsers.Postgresql
 {
+#nullable enable
     public class PostgresqlSelectVisitor : ExpressionVisitor, ISqlVisitor
     {
         private StringBuilder _Sql = new();
@@ -265,5 +266,5 @@ namespace Socigy.OpenSource.DB.Core.Parsers.Postgresql
             }
         }
     }
-
+#nullable disable
 }

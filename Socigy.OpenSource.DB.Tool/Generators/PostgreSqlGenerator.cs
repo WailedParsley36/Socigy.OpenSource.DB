@@ -13,19 +13,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             var upCommands = new List<string>();
             var downCommands = new List<string>();
 
-            // Creating or Using Database
-            string databaseName = Configuration.Settings.Database.DatabaseName ?? Configuration.BaseNamespace;
-            if (isFirstMigration)
-            {
-                upCommands.Add($"CREATE DATABASE {Quote(databaseName)};");
-                downCommands.Add($"DROP DATABASE IF EXISTS {Quote(databaseName)};");
-            }
-            else
-            {
-                upCommands.Add($"USE DATABASE {Quote(databaseName)};");
-                downCommands.Add($"USE DATABASE {Quote(databaseName)};");
-            }
-
             // --- UP: 1. Drop Removed Tables ---
             // --- DOWN: 5. Re-Create Removed Tables & Restore Data ---
             foreach (var table in diff.RemovedTables)

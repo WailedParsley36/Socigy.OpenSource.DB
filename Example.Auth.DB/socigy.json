@@ -1,6 +1,6 @@
 {
   "database": {
     "platform": "postgresql",
-    "className": "AuthDb"
+    "databaseName": "AuthDb"
   }
 }

@@ -14,7 +14,7 @@ using Socigy.OpenSource.DB.Migrations;
 namespace <#= BaseNamespace #>
 {
     [GeneratedCode("Socigy.OpenSource.DB", "<#= System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).ProductVersion #>")]
-    public class <#= Name #> : IMigration
+    public class <#= Name #> : ILocalMigration
     {
         public string Id => _Id;
 

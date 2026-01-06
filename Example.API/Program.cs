@@ -1,18 +1,19 @@
 using Example.Auth.DB;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Npgsql;
-using Socigy.OpenSource.DB.Core.Enums;
-using Socigy.OpenSource.DB.Generated;
+using Socigy.OpenSource.DB.AuthDb.Extensions;
+using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.SharedDb.Extensions;
+using Socigy.OpenSource.DB.UserDb.Extensions;
 using System.Data.Common;
-using System.Text.Json.Serialization;
 using static Socigy.OpenSource.DB.Core.SyntaxHelper.DB;
 
 async Task TestAsync(DbConnection connection)
 {
     string username = "wailed";
 
-    // TODO: WHERE clause
-    // TODO: Procedures mapping with conversions out
+    // TODO: SQL Procedures mapping with conversions out
+    // CREATE PROCEDURE GetUsersByEmail(IN email_param VARCHAR(255))
 
     // TODO: JOINs in SQL -> LATER LATER LATER
     //users = User.JoinCourses((x, y) => x.Email == y.TeacherEmail, JoinType.None)
@@ -100,64 +101,49 @@ async Task TestAsync(DbConnection connection)
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+builder.Services.AddLogging(logging => logging.AddConsole());
 
 builder.WebHost.UseKestrelHttpsConfiguration();
-
-builder.AddAuthDb();
-//builder.AddSharedDb();
-//builder.AddUserDb();
-
 builder.Configuration.AddJsonFile("appsettings.json");
+
+builder.AddSharedDb();
+builder.AddAuthDb();
+builder.AddUserDb();
 
 var app = builder.Build();
 
-var Configuration = app.Services.GetRequiredService<IConfiguration>();
+await app.EnsureLatestSharedDbMigration();
+await app.EnsureLatestAuthDbMigration();
+await app.EnsureLatestUserDbMigration();
 
-var connection = new NpgsqlConnection(Configuration.GetConnectionString("Default"));
-await TestAsync(connection);
+//var Configuration = app.Services.GetRequiredService<IConfiguration>();
 
-app.Run();
+//var connection = new NpgsqlConnection(Configuration.GetConnectionString("Default"));
+//connection.ConnectionString.Replace("Database=AuthDb", "Database=postgres");
 
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
+//await TestAsync(connection);
 
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
+
+public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
 {
-
-}
-
-public static class BuildExtensions
-{
-    public static WebApplicationBuilder AddAuthDb(this WebApplicationBuilder builder)
+    public DeleteCommandBuilder()
     {
-        builder.Services.AddSingleton<MigrationManager, AuthDbMigrationmanager>();
-        return builder;
+    }
+
+    public async Task<int> ExecuteAsync()
+    {
+        return 0;
     }
 }
 
-public interface IMigrationManager
+public class UpdateCommandBuilder : SqlCommandBuilder<UpdateCommandBuilder>
 {
-    string GetCurrentMigrationVersion();
-}
-
-public abstract class MigrationManager : IMigrationManager
-{
-    public string GetCurrentMigrationVersion()
+    public UpdateCommandBuilder()
     {
-        throw new NotImplementedException();
     }
-}
 
-public class AuthDbMigrationmanager : MigrationManager
-{
-
-}
-
-public class UserDbMigrationmanager : MigrationManager
-{
-
+    public async Task<int> ExecuteAsync()
+    {
+        return 0;
+    }
 }

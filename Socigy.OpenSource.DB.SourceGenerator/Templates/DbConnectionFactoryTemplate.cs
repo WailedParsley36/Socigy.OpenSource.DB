@@ -18,9 +18,9 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public partial class MigrationTableTemplate : MigrationTableTemplateBase
+    public partial class DbConnectionFactoryTemplate : DbConnectionFactoryTemplateBase
     {
 #line hidden
         /// <summary>
@@ -28,50 +28,122 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using System;\r\nusing Socigy.OpenSource.DB.Attributes;\r\nusing Socigy.OpenSource.DB" +
-                    ".Migrations;\r\n\r\nnamespace ");
+            this.Write("using Microsoft.Extensions.Configuration;\r\nusing Microsoft.Extensions.DependencyI" +
+                    "njection;\r\nusing Microsoft.Extensions.Logging;\r\nusing Microsoft.Extensions.Hosti" +
+                    "ng;\r\nusing Socigy.OpenSource.DB.Core;\r\nusing System.Data.Common;\r\nusing System.S" +
+                    "ecurity;\r\n");
             
-            #line 10 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+            #line 13 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
+
+    foreach (var usingString in Usings)
+    {
+
+            
+            #line default
+            #line hidden
+            this.Write("using ");
+            
+            #line 16 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(usingString));
+            
+            #line default
+            #line hidden
+            this.Write(";\r\n");
+            
+            #line 17 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
+
+    }
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n#nullable enable\r\n\r\nnamespace ");
+            
+            #line 23 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    public static partial class ");
+            this.Write("\r\n{\r\n    public class ");
             
-            #line 12 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DbName));
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabasePrefix));
             
             #line default
             #line hidden
-            this.Write(@"
-    {
-        [Table(""_scg_migrations"")]
-        public partial class Migration : IMigration
-        {
-            [PrimaryKey]
-            public long Id { get; set; }
-
-            public string HumanId { get; set; }
-
-            [Default]
-            public DateTime AppliedAt { get; set; }
-
-            [Default(""false"")]
-            public bool IsRollback { get; set; }
-
-            public string ExecutedBy { get; set; }
-        }
-    }
-}
-
-");
+            this.Write("ConnectionFactory : IDbConnectionFactory, IHostedLifecycleService\r\n    {\r\n       " +
+                    " private readonly IConfiguration _Configuration;\r\n        private readonly strin" +
+                    "g? _ServiceKey;\r\n\r\n        private readonly ILogger _Logger;\r\n        private re" +
+                    "adonly string? _ConnectionString;\r\n        public PostgresqlConnectionFactory(IL" +
+                    "ogger<PostgresqlConnectionFactory> logger, IConfiguration configuration, [Servic" +
+                    "eKey] object? key)\r\n        {\r\n            _Configuration = configuration;\r\n    " +
+                    "        _ServiceKey = key as string;\r\n            _Logger = logger;\r\n\r\n         " +
+                    "   var connStrings = _Configuration.GetRequiredSection(\"ConnectionStrings\");\r\n  " +
+                    "          if (!string.IsNullOrEmpty(_ServiceKey))\r\n                connStrings =" +
+                    " connStrings.GetSection(_ServiceKey);\r\n\r\n            var connectionString = conn" +
+                    "Strings[\"Default\"];\r\n            if (connectionString == null)\r\n            {\r\n " +
+                    "               if (key != null)\r\n                    logger.LogWarning($\"No defa" +
+                    "ult connection string for database {key} was found!\");\r\n                else\r\n  " +
+                    "                  logger.LogWarning(\"No default connection string was found!\");\r" +
+                    "\n\r\n                return;\r\n            }\r\n\r\n            _ConnectionString = con" +
+                    "nectionString;\r\n        }\r\n\r\n        public async Task<bool> EnsureDbExists()\r\n " +
+                    "       {\r\n            if (_ConnectionString == null)\r\n            {\r\n           " +
+                    "     string message = $\"Failed to ensure that the {_ServiceKey} database exists," +
+                    " because no ConnectionString was provided!\";\r\n                _Logger.LogCritica" +
+                    "l(message);\r\n                throw new InvalidDataException(message);\r\n         " +
+                    "   }\r\n            if (_ServiceKey == null)\r\n            {\r\n                strin" +
+                    "g message = \"No service key (database name) was provided to this connection fact" +
+                    "ory instance. Unable to ensure that the database exist!\";\r\n                _Logg" +
+                    "er.LogCritical(message);\r\n                throw new InvalidDataException(message" +
+                    ");\r\n            }\r\n\r\n            // Connect to the default \'postgres\' database t" +
+                    "o check/create the new database\r\n            var masterConnectionBuilder = new N" +
+                    "pgsqlConnectionStringBuilder(_ConnectionString)\r\n            {\r\n                " +
+                    "Database = \"postgres\"\r\n            };\r\n\r\n            bool databaseExists = false" +
+                    ";\r\n\r\n            using (var connection = new NpgsqlConnection(masterConnectionBu" +
+                    "ilder.ToString()))\r\n            {\r\n                await connection.OpenAsync();" +
+                    "\r\n\r\n                using (var command = connection.CreateCommand())\r\n          " +
+                    "      {\r\n                    command.CommandText = \"SELECT 1 FROM pg_database WH" +
+                    "ERE datname = @databaseName\";\r\n                    command.Parameters.Add(new Np" +
+                    "gsqlParameter(\"databaseName\", _ServiceKey));\r\n                    \r\n            " +
+                    "        var result = await command.ExecuteScalarAsync();\r\n                    da" +
+                    "tabaseExists = result != null;\r\n                }\r\n\r\n                if (!databa" +
+                    "seExists)\r\n                {\r\n                    using (var command = connectio" +
+                    "n.CreateCommand())\r\n                    {\r\n                        command.Comma" +
+                    "ndText = $\"CREATE DATABASE \\\"{_ServiceKey}\\\"\";\r\n                        await co" +
+                    "mmand.ExecuteNonQueryAsync();\r\n                    }\r\n                }\r\n       " +
+                    "     }\r\n\r\n            return databaseExists;\r\n        }\r\n\r\n        private strin" +
+                    "g? GetConnectionString(string key)\r\n        {\r\n            var connStrings = _Co" +
+                    "nfiguration.GetRequiredSection(\"ConnectionStrings\");\r\n            if (!string.Is" +
+                    "NullOrEmpty(_ServiceKey))\r\n                connStrings = connStrings.GetSection(" +
+                    "_ServiceKey);\r\n\r\n            return connStrings[key];\r\n        }\r\n\r\n        publ" +
+                    "ic DbConnection Create(string? connectionKey = null)\r\n        {\r\n            str" +
+                    "ing? connectionString = null;\r\n            if (connectionKey != null)\r\n         " +
+                    "       connectionString = GetConnectionString(connectionKey);\r\n\r\n            con" +
+                    "nectionString ??= _ConnectionString ?? throw new InvalidDataException(\"Unable to" +
+                    " create DbConnection without a ConnectionString. Please provide a connection str" +
+                    "ing and try again!\");\r\n\r\n            // Connecting to the correct database\r\n    " +
+                    "        connectionString += $\"Database={_ServiceKey}\";\r\n\r\n            return new" +
+                    " NpgsqlConnection(connectionString);\r\n        }\r\n\r\n        public async Task Sta" +
+                    "rtAsync(CancellationToken cancellationToken)\r\n        {\r\n            if (_Servic" +
+                    "eKey != null && _ConnectionString != null)\r\n                await EnsureDbExists" +
+                    "();\r\n        }\r\n\r\n        #region HostedLifeCycle\r\n        public async Task Sta" +
+                    "rtedAsync(CancellationToken cancellationToken)\r\n        {\r\n        }\r\n        pu" +
+                    "blic async Task StartingAsync(CancellationToken cancellationToken)\r\n        {\r\n\r" +
+                    "\n        }\r\n        public async Task StoppedAsync(CancellationToken cancellatio" +
+                    "nToken)\r\n        {\r\n        }\r\n        public async Task StoppingAsync(Cancellat" +
+                    "ionToken cancellationToken)\r\n        {\r\n        }\r\n        public async Task Sto" +
+                    "pAsync(CancellationToken cancellationToken)\r\n        {\r\n        }\r\n        #endr" +
+                    "egion\r\n    }\r\n}\r\n\r\n#nullable disable\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 33 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationTableTemplate.tt"
+        #line 157 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\DbConnectionFactoryTemplate.tt"
 
     public string BaseNamespace { get; set; }
-    public string DbName { get; set; }
+
+    public string DatabasePrefix { get; set; }
+    public IEnumerable<string> Usings { get; set; }
+    public string ConnectionClassName { get; set; }
 
         
         #line default
@@ -85,7 +157,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public class MigrationTableTemplateBase
+    public class DbConnectionFactoryTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
