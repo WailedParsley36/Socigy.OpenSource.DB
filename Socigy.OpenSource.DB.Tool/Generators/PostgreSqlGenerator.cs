@@ -98,7 +98,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             return (upCommands, downCommands);
         }
 
-        // ... [GenerateCreateTable is unchanged] ...
         private string GenerateCreateTable(DbTable table)
         {
             var sb = new StringBuilder();
@@ -134,7 +133,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             return sb.ToString();
         }
 
-        // ... [GenerateTableAlterations is unchanged] ...
         private (List<string> Up, List<string> Down) GenerateTableAlterations(TableAlteration alteration)
         {
             var up = new List<string>();
@@ -238,8 +236,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
 
             return (up, down);
         }
-
-        // --- NEW: Generate Data Changes ---
         private (List<string> Up, List<string> Down) GenerateDataAlterations(TableAlteration alteration)
         {
             var up = new List<string>();
@@ -277,7 +273,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             var vals = string.Join(", ", row.Values.Select(FormatSqlValue));
             return $"INSERT INTO {Quote(tableName)} ({cols}) VALUES ({vals});";
         }
-
         private string GenerateDeleteStatement(string tableName, Dictionary<string, object?> row, DbTable tableDef)
         {
             // Identify PK columns to build the WHERE clause
@@ -305,7 +300,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
 
             return $"DELETE FROM {Quote(tableName)} WHERE {string.Join(" AND ", criteria)};";
         }
-
         private string GenerateUpdateStatement(string tableName, Dictionary<string, object?> row, DbTable tableDef, List<string> changedCols)
         {
             var pkCols = tableDef.Columns.Where(c => c.IsPrimaryKey == true).ToList();
@@ -335,6 +329,7 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             return $"UPDATE {Quote(tableName)} SET {string.Join(", ", updates)} WHERE {string.Join(" AND ", whereClauses)};";
         }
 
+        #region Helper Methods
         private string FormatSqlValue(object? value)
         {
             if (value == null) return "NULL";
@@ -366,7 +361,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             }
         }
 
-        // ... [Helper Methods Unchanged] ...
         private string GenerateColumnDefinition(DbColumn col)
         {
             var sb = new StringBuilder();
@@ -413,7 +407,7 @@ namespace Socigy.OpenSource.DB.Tool.Generators
             return $"ALTER TABLE {Quote(tableName)} ADD {GenerateConstraintDefinition(constraint, Configuration.CurrentSchema.Tables.FirstOrDefault(x => x.Name == tableName))};";
         }
 
-        private string Quote(string id) => $"\"\"{id}\"\"";
+        private string Quote(string id) => $"\"{id}\"";
 
         private string GuessConstraintName(DbConstraint con) => $"IX_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
 
@@ -471,5 +465,6 @@ namespace Socigy.OpenSource.DB.Tool.Generators
 
             return normalizedType;
         }
+        #endregion
     }
 }

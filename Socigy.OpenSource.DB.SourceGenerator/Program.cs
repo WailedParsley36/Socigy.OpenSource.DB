@@ -15,6 +15,8 @@ using System.Text.Json.Serialization;
 
 namespace Socigy.OpenSource.DB.SourceGenerator
 {
+    // TODO: Proper SqlCommand/Connection disposals: await using
+
     [Generator]
     public class Program : IIncrementalGenerator
     {
@@ -111,7 +113,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
 
             // [Table("_scg_migrations")]
             // MigrationManager bindings + IMigration bundling
-            MigrationGenerator.Execute(ctx, compilation, tables, this);
+            MigrationGenerator.Execute(ctx, compilation, this);
         }
 
         public string? GetDatabasePrefix()

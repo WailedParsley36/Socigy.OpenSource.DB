@@ -40,7 +40,7 @@ namespace Socigy.OpenSource.DB.Tool.Templates
             this.Write(" by ");
             
             #line 11 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.Tool\Templates\MigrationFileTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(GitHelper.GetGitSignature(Configuration.ProjectDir)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(GitHelper.GetGitSignature(Configuration.ProjectDir) ?? $"{Environment.MachineName}\\{Environment.UserName}"));
             
             #line default
             #line hidden

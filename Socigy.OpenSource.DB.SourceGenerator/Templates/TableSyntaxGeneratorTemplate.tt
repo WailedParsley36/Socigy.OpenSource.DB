@@ -71,12 +71,12 @@ namespace <#= Namespace #>
                 if (string.IsNullOrEmpty(column.Converter))
                 {
 
-#>          <#= column.SourceName #> = ReadValue<<#= column.TypeName #>>(reader, "<#= column.SourceName #>", columnOverrides);
+#>          <#= column.SourceName #> = ReadValue<<#= column.TypeName #>>(reader, <#= column.SourceName #>ColumnName, columnOverrides);
 <#
                 }
                 else
                 {
-#>          <#= column.SourceName #> = ReadValueConvertor<<#= column.TypeName #>,<#= column.Converter #>>(reader, "<#= column.SourceName #>", columnOverrides);
+#>          <#= column.SourceName #> = ReadValueConvertor<<#= column.TypeName #>,<#= column.Converter #>>(reader, <#= column.SourceName #>ColumnName, columnOverrides);
 <#
                 }
             }

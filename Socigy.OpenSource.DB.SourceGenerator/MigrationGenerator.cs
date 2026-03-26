@@ -12,7 +12,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
 {
     public static class MigrationGenerator
     {
-        public static void Execute(SourceProductionContext ctx, Compilation compilation, IEnumerable<ClassDeclarationSyntax> tablesAndMigrations, Program program)
+        public static void Execute(SourceProductionContext ctx, Compilation compilation, Program program)
         {
             string dbName = program.Settings?.Database.DatabaseName ?? "UnnamedDb";
 

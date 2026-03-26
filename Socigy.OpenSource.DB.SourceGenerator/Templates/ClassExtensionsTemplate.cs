@@ -28,18 +28,22 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Socigy.OpenSource.DB.Core;\r\nusing Socigy.OpenSource.DB.Migrations;\r\nusing S" +
-                    "ocigy.OpenSource.DB.Core.Migrations;\r\nusing Microsoft.AspNetCore.Builder;\r\nusing" +
-                    " Microsoft.Extensions.DependencyInjection;\r\nusing Socigy.OpenSource.DB.");
+            this.Write(@"using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.Migrations;
+using Socigy.OpenSource.DB.Core.Migrations;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Socigy.OpenSource.DB.");
             
-            #line 11 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 12 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
             this.Write(".Factory;\r\n\r\nnamespace ");
             
-            #line 13 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 14 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
             
             #line default
@@ -47,14 +51,46 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             this.Write(" \r\n{\r\n    public static partial class BuildExtensions\r\n    {\r\n        public stat" +
                     "ic WebApplicationBuilder Add");
             
-            #line 17 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 18 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
-            this.Write("(this WebApplicationBuilder builder)\r\n        {\r\n");
+            this.Write("(this WebApplicationBuilder builder)\r\n        {\r\n            builder.Services.Add" +
+                    "");
             
-            #line 19 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 20 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("();\r\n            return builder;\r\n        }\r\n\r\n        public static HostApplicat" +
+                    "ionBuilder Add");
+            
+            #line 24 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("(this HostApplicationBuilder builder)\r\n        {\r\n            builder.Services.Ad" +
+                    "d");
+            
+            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("();\r\n            return builder;\r\n        }\r\n\r\n        public static IServiceColl" +
+                    "ection Add");
+            
+            #line 30 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("(this IServiceCollection collection)\r\n        {\r\n");
+            
+            #line 32 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
 
             if (IncludeConnectionFactory) 
             {
@@ -62,73 +98,102 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             
             #line default
             #line hidden
-            this.Write("            builder.Services.AddKeyedSingleton<IDbConnectionFactory, ");
+            this.Write("            collection.AddKeyedSingleton<IDbConnectionFactory, ");
             
-            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 35 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabasePrefix));
             
             #line default
             #line hidden
             this.Write("ConnectionFactory>(\"");
             
-            #line 22 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 35 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
             this.Write("\");\r\n");
             
-            #line 23 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 36 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
 
             }
 
             
             #line default
             #line hidden
-            this.Write("            builder.Services.AddKeyedSingleton<IMigrationManager, ");
+            this.Write("            collection.AddKeyedSingleton<IMigrationManager, ");
             
-            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 39 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(AssemblyBaseNamespace));
             
             #line default
             #line hidden
             this.Write(".Socigy.Generated.");
             
-            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 39 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
             this.Write(".MigrationManager>(\"");
             
-            #line 26 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 39 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
-            this.Write("\");\r\n            return builder;\r\n        }\r\n    }\r\n\r\n    public static partial c" +
-                    "lass WebApplicationExtensions\r\n    {\r\n        public static async Task EnsureLat" +
-                    "est");
+            this.Write("\");\r\n            return collection;\r\n        }\r\n    }\r\n\r\n    public static partia" +
+                    "l class WebApplicationExtensions\r\n    {\r\n        private const string ");
             
-            #line 33 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 46 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("Name = \"");
+            
+            #line 46 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public static async Task EnsureLatest");
+            
+            #line 48 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
             this.Write("Migration(this WebApplication app)\r\n        {\r\n            var authMigrationManag" +
-                    "er = app.Services.GetRequiredKeyedService<IMigrationManager>(\"");
+                    "er = app.Services.GetRequiredKeyedService<IMigrationManager>(");
             
-            #line 35 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            #line 50 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
             
             #line default
             #line hidden
-            this.Write("\");\r\n            await authMigrationManager.EnsureLatestVersion();\r\n        }\r\n  " +
-                    "  }\r\n}\r\n\r\n");
+            this.Write("Name);\r\n            await authMigrationManager.EnsureLatestVersion();\r\n        }\r" +
+                    "\n\r\n        public static async Task EnsureLatest");
+            
+            #line 54 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("Migration(this IHost app)\r\n        {\r\n            var authMigrationManager = app." +
+                    "Services.GetRequiredKeyedService<IMigrationManager>(");
+            
+            #line 56 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("Name);\r\n            await authMigrationManager.EnsureLatestVersion();\r\n        }\r" +
+                    "\n    }\r\n}\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 41 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
+        #line 62 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\ClassExtensionsTemplate.tt"
 
     public string DatabaseName { get; set; }
     public string DatabasePrefix { get; set; }

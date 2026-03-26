@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using Socigy.OpenSource.DB.Core;
 using Socigy.OpenSource.DB.Core.CommandBuilders;
 using Socigy.OpenSource.DB.Core.Interfaces;
+using Npgsql;
+using NpgsqlTypes;
 
 #nullable enable
 
@@ -126,48 +128,80 @@ namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
         {
 #if NET6_0_OR_GREATER
             if (_Batch != null)
-                throw new InvalidOperationException("Cannot execute command, when DbBatch was provided. Please call AddToBatchAsync()");
-            else 
+                throw new InvalidOperationException("Cannot execute command when DbBatch was provided.");
 #endif
+
             if (_Connection == null)
-                throw new InvalidOperationException("Cannot execute command, when no DbConnection was provided. Please call WithConnection()/WithTransaction() first");
+                throw new InvalidOperationException("No DbConnection provided.");
 
             if (_Connection.State != System.Data.ConnectionState.Open)
                 await _Connection.OpenAsync();
 
-            var command = _Connection.CreateCommand();
+            await using var command = _Connection.CreateCommand() as NpgsqlCommand;
+            if (command == null) return false;
+
             if (_Transaction != null)
-                command.Transaction = _Transaction;
-
-            // INSERT INTO {_TableRow.GetTableName()}(name1, name2, name3) VALUES(val1, val2, val3)
-
-            StringBuilder main = new($"INSERT INTO \"{_TableRow.GetTableName()}\"(");
-            StringBuilder values = new();
+                command.Transaction = _Transaction as NpgsqlTransaction;
 
             _ColumnInfo ??= _TableRow.GetColumns();
+
+            var columnNames = new List<string>();
+            var paramNames = new List<string>();
+
             foreach (var row in _ColumnInfo)
             {
-                main.Append($"{row.Key}, ");
+                string colName = row.Key;
+                object? value = row.Value.Value;
+                Type type = row.Value.Type;
 
-                // We don't need to worry about suplementing the value type to the DbParameter
-                if (row.Value.Value == null || row.Value.Value == DBNull.Value)
+                columnNames.Add($"\"{colName}\"");
+
+                string paramName = $"@{colName}";
+                paramNames.Add(paramName);
+
+                var param = new NpgsqlParameter(paramName, value ?? DBNull.Value);
+
+                // If the value is null, we MUST specify the type explicitly
+                // If the value exists, Npgsql can usually infer it, but being explicit doesn't hurt.
+                if (value == null || value == DBNull.Value)
                 {
-                    values.AppendLine("NULL, ");
-                    continue;
+                    param.NpgsqlDbType = GetDbType(type);
                 }
 
-                var param = command.CreateParameter();
-                param.ParameterName = row.Key;
-                param.Value = row.Value;
                 command.Parameters.Add(param);
-
-                values.AppendLine($"@{row.Key}, ");
             }
 
-            command.CommandText = $"{main.ToString().TrimEnd([' ', ','])}) VALUES({values.ToString().TrimEnd([' ', ','])})";
+            command.CommandText = $@"
+        INSERT INTO ""{_TableRow.GetTableName()}"" 
+        ({string.Join(", ", columnNames)}) 
+        VALUES 
+        ({string.Join(", ", paramNames)})";
 
             int rowsAffected = await command.ExecuteNonQueryAsync();
             return rowsAffected > 0;
+        }
+
+        public NpgsqlDbType GetDbType(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            return type switch
+            {
+                Type t when t == typeof(int) => NpgsqlDbType.Integer,
+                Type t when t == typeof(long) => NpgsqlDbType.Bigint,
+                Type t when t == typeof(string) => NpgsqlDbType.Text,
+                Type t when t == typeof(bool) => NpgsqlDbType.Boolean,
+                Type t when t == typeof(DateTime) => NpgsqlDbType.Timestamp,
+                Type t when t == typeof(float) => NpgsqlDbType.Real,
+                Type t when t == typeof(double) => NpgsqlDbType.Double,
+                Type t when t == typeof(decimal) => NpgsqlDbType.Numeric,
+                Type t when t == typeof(Guid) => NpgsqlDbType.Uuid,
+                Type t when t == typeof(byte[]) => NpgsqlDbType.Bytea,
+                Type t when t == typeof(short) => NpgsqlDbType.Smallint,
+                Type t when t == typeof(char) => NpgsqlDbType.Char,
+                // Fallback or specific handling for JSON, Arrays, etc.
+                _ => NpgsqlDbType.Text
+            };
         }
     }
 }

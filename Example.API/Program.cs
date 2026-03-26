@@ -1,8 +1,6 @@
 using Example.Auth.DB;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Npgsql;
-using Socigy.OpenSource.DB.AuthDb.Extensions;
 using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.AuthDb.Extensions;
 using Socigy.OpenSource.DB.SharedDb.Extensions;
 using Socigy.OpenSource.DB.UserDb.Extensions;
 using System.Data.Common;
@@ -35,13 +33,13 @@ async Task TestAsync(DbConnection connection)
 
     users = User.Query(x => x.ParentId == Guid.NewGuid() || x.IsChild && x.Visibility == UserVisibility.Public)
         // SELECT id,email,username ....
-        .Select(x => new object?[] { x.ID, x.Email, x.Username })
+        .Select(x => new object?[] { x.ID, x.Email, x.Userna })
 
         // SELECT id, emailVerified, username ...
-        .Select(x => new object?[] { x.ID, username == "wailed" ? x.Email : x.EmailVerified, x.Username })
+        .Select(x => new object?[] { x.ID, username == "wailed" ? x.Email : x.EmailVerified, x.Userna })
 
         // SELECT email AS "emailer", username = 'this_value' ... 
-        .Select(x => new object?[] { Select.Custom($"{User.EmailColumnName} AS \"emailer\", {User.UsernameColumnName} = 'this_value'"), Select.All() })
+        .Select(x => new object?[] { Select.Custom($"{User.EmailColumnName} AS \"emailer\", {User.UsernaColumnName} = 'this_value'"), Select.All() })
 
         // SELECT id, CASE WHEN email = @p0 OR username LIKE ('%Example%') OR username LIKE ('Example%') OR username LIKE ('%Example') THEN true ELSE false END AS "is_example", username ...
         // p0 = 'example@example.com'
@@ -50,13 +48,13 @@ async Task TestAsync(DbConnection connection)
                     x.ID,
                     Select.Case()
                         .When(x.Email == "exampl@example.com" ||
-                              x.Username.Contains("Example") /* LIKE ("%Example%") */ ||
-                              x.Username.StartsWith("Example") /* LIKE ("Example%") */ ||
-                              x.Username.EndsWith("Example") /* LIKE ("%Example") */)
+                              x.Userna.Contains("Example") /* LIKE ("%Example%") */ ||
+                              x.Userna.StartsWith("Example") /* LIKE ("Example%") */ ||
+                              x.Userna.EndsWith("Example") /* LIKE ("%Example") */)
                         .Then(true)
                         .Else(false)
                         .As("is_example"),
-                    x.Username
+                    x.Userna
         })
         .Select(x => new object?[]
         {
@@ -74,7 +72,7 @@ async Task TestAsync(DbConnection connection)
             OrderBy.Desc(x.BirthDate),
             Select.Case()
                 .When(x.Email == "example@example.com")
-                .Then(OrderBy.Desc(x.Username))
+                .Then(OrderBy.Desc(x.Userna))
                 .Else(x.Email)
         })
 
@@ -85,7 +83,7 @@ async Task TestAsync(DbConnection connection)
             x.BirthDate,
             Select.Case()
                 .When(x.Email == "example@example.com")
-                .Then(x.Username)
+                .Then(x.Userna)
                 .Else(OrderBy.Asc(x.Email))
         })
         .WithConnection(connection)
@@ -112,9 +110,13 @@ builder.AddUserDb();
 
 var app = builder.Build();
 
+// TODO: Bit flags in roles
+
 await app.EnsureLatestSharedDbMigration();
 await app.EnsureLatestAuthDbMigration();
 await app.EnsureLatestUserDbMigration();
+
+await app.RunAsync();
 
 //var Configuration = app.Services.GetRequiredService<IConfiguration>();
 

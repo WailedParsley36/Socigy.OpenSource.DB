@@ -7,6 +7,7 @@ using Socigy.OpenSource.DB.Core;
 using Socigy.OpenSource.DB.Migrations;
 using Socigy.OpenSource.DB.Core.Migrations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Socigy.OpenSource.DB.<#= DatabaseName #>.Factory;
 
@@ -16,23 +17,43 @@ namespace <#= BaseNamespace #>
     {
         public static WebApplicationBuilder Add<#= DatabaseName #>(this WebApplicationBuilder builder)
         {
+            builder.Services.Add<#= DatabaseName #>();
+            return builder;
+        }
+
+        public static HostApplicationBuilder Add<#= DatabaseName #>(this HostApplicationBuilder builder)
+        {
+            builder.Services.Add<#= DatabaseName #>();
+            return builder;
+        }
+
+        public static IServiceCollection Add<#= DatabaseName #>(this IServiceCollection collection)
+        {
 <#
             if (IncludeConnectionFactory) 
             {
-#>            builder.Services.AddKeyedSingleton<IDbConnectionFactory, <#= DatabasePrefix #>ConnectionFactory>("<#= DatabaseName #>");
+#>            collection.AddKeyedSingleton<IDbConnectionFactory, <#= DatabasePrefix #>ConnectionFactory>("<#= DatabaseName #>");
 <#
             }
 #>
-            builder.Services.AddKeyedSingleton<IMigrationManager, <#= AssemblyBaseNamespace #>.Socigy.Generated.<#= DatabaseName #>.MigrationManager>("<#= DatabaseName #>");
-            return builder;
+            collection.AddKeyedSingleton<IMigrationManager, <#= AssemblyBaseNamespace #>.Socigy.Generated.<#= DatabaseName #>.MigrationManager>("<#= DatabaseName #>");
+            return collection;
         }
     }
 
     public static partial class WebApplicationExtensions
     {
+        private const string <#= DatabaseName #>Name = "<#= DatabaseName #>";
+
         public static async Task EnsureLatest<#= DatabaseName #>Migration(this WebApplication app)
         {
-            var authMigrationManager = app.Services.GetRequiredKeyedService<IMigrationManager>("<#= DatabaseName #>");
+            var authMigrationManager = app.Services.GetRequiredKeyedService<IMigrationManager>(<#= DatabaseName #>Name);
+            await authMigrationManager.EnsureLatestVersion();
+        }
+
+        public static async Task EnsureLatest<#= DatabaseName #>Migration(this IHost app)
+        {
+            var authMigrationManager = app.Services.GetRequiredKeyedService<IMigrationManager>(<#= DatabaseName #>Name);
             await authMigrationManager.EnsureLatestVersion();
         }
     }

@@ -161,14 +161,14 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             
             #line default
             #line hidden
-            this.Write(">(reader, \"");
+            this.Write(">(reader, ");
             
             #line 74 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
             
             #line default
             #line hidden
-            this.Write("\", columnOverrides);\r\n");
+            this.Write("ColumnName, columnOverrides);\r\n");
             
             #line 75 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
 
@@ -200,14 +200,14 @@ using Socigy.OpenSource.DB.Core.Parsers.");
             
             #line default
             #line hidden
-            this.Write(">(reader, \"");
+            this.Write(">(reader, ");
             
             #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.SourceName));
             
             #line default
             #line hidden
-            this.Write("\", columnOverrides);\r\n");
+            this.Write("ColumnName, columnOverrides);\r\n");
             
             #line 80 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
 

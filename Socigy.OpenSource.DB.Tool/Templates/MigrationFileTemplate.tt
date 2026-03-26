@@ -8,7 +8,7 @@ using System.CodeDom.Compiler;
 using Socigy.OpenSource.DB.Migrations;
 
 /*
-    This code was generated using Socigy.OpenSource.DB generation tool at <#= DateTime.UtcNow.ToString() #> by <#= GitHelper.GetGitSignature(Configuration.ProjectDir) #>
+    This code was generated using Socigy.OpenSource.DB generation tool at <#= DateTime.UtcNow.ToString() #> by <#= GitHelper.GetGitSignature(Configuration.ProjectDir) ?? $"{Environment.MachineName}\\{Environment.UserName}" #>
 */
 
 namespace <#= BaseNamespace #>

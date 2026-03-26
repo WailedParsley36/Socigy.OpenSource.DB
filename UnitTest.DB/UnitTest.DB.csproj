@@ -7,11 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.17" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Socigy.OpenSource.DB.SourceGenerator\Socigy.OpenSource.DB.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<PackageReference Include="Npgsql" Version="10.0.1" />
+		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.33" />
 	</ItemGroup>
 
 </Project>

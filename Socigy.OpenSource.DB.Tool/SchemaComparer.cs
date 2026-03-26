@@ -83,7 +83,7 @@ namespace Socigy.OpenSource.DB.Tool
                 }
                 else if (!string.IsNullOrEmpty(newCol.RenamedFrom))
                 {
-                    oldCol = oldColsMap.Values.FirstOrDefault(c => c.Name == newCol.RenamedFrom);
+                    oldCol = oldColsMap.Values.FirstOrDefault(c => c.SourceName == newCol.RenamedFrom);
                     if (oldCol != null) matchedKey = oldCol.SourceName ?? oldCol.Name;
                 }
 

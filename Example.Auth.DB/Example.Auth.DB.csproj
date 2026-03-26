@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.25" />
+		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.33" />
 	</ItemGroup>
 
 	<ItemGroup>
