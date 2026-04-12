@@ -47,11 +47,11 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                 CustomPostClass = "}",
                 Columns =
                 [
-                    ("Id", typeof(long).FullName, null),
-                    ("HumanId", typeof(string).FullName, null),
-                    ("IsRollback", typeof(bool).FullName, null),
-                    ("AppliedAt", typeof(DateTime).FullName, null),
-                    ("ExecutedBy", typeof(string).FullName, null),
+                    ("Id", typeof(long).FullName, true, null),
+                    ("HumanId", typeof(string).FullName, false, null),
+                    ("IsRollback", typeof(bool).FullName, false, null),
+                    ("AppliedAt", typeof(DateTime).FullName, false, null),
+                    ("ExecutedBy", typeof(string).FullName, false, null),
                 ],
             }.TransformText());
 

@@ -9,6 +9,7 @@ namespace Socigy.OpenSource.DB.Core.CommandBuilders
     {
         public Type Type { get; set; }
         public object? Value { get; set; }
+        public bool IsPrimaryKey { get; set; }
     }
 #nullable disable
 }

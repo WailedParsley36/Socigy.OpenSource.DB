@@ -63,7 +63,8 @@ namespace <#= Namespace #>
                     new ColumnInfo()
                     {
                         Type = typeof(<#= col.Type.Replace("?", " ") #>),
-                        Value = <#= col.Name #>
+                        Value = <#= col.Name #>,
+                        IsPrimaryKey = <#= col.IsPrimaryKey ? "true" : "false" #>
                     }
                 },
 <#
@@ -100,5 +101,6 @@ namespace <#= Namespace #>
         public string Name { get; set; }
         public string Type { get; set; }
         public string DatabaseName { get; set; }
+        public bool IsPrimaryKey { get; set; }
     }
 #>

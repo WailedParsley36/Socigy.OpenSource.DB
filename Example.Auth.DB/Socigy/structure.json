@@ -1,5 +1,6 @@
 {
-  "id": "Initial Migration",
+  "id": "Renamed_User_Column",
+  "previousId": "Initial Migration",
   "tables": [
     {
       "name": "user_visibility",
@@ -55,8 +56,9 @@
           "isPrimaryKey": true
         },
         {
-          "name": "username",
-          "sourceName": "Username",
+          "name": "userna",
+          "sourceName": "Userna",
+          "renamedFrom": "Username",
           "dotnetType": "System.String",
           "databaseType": "text"
         },

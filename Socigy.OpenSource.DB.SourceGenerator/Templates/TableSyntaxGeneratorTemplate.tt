@@ -94,38 +94,33 @@ namespace <#= Namespace #>
             return new <#= DbEnginePrefix #>InsertCommandBuilder<<#= ClassName #>>(this);
         }
 
-        public static async Task<bool> InsertAsync(<#= ClassName #> instance, DbConnection connection) 
+        public static async Task<bool> InsertAsync(<#= ClassName #> instance, DbConnection connection)
         {
             return await new <#= DbEnginePrefix #>InsertCommandBuilder<<#= ClassName #>>(instance)
                 .WithConnection(connection)
                 .ExecuteAsync();
         }
 
-        public static UpdateCommandBuilder Update()
+        public <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>> Update()
         {
-            return new UpdateCommandBuilder();
+            return new <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>>(this);
+        }
+
+        public static async Task<int> UpdateAsync(<#= ClassName #> instance, DbConnection connection)
+        {
+            return await new <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>>(instance)
+                .WithConnection(connection)
+                .ExecuteAsync();
         }
 
         public static DeleteCommandBuilder Delete()
         {
             return new DeleteCommandBuilder();
         }
-        
+
         public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
         {
             public DeleteCommandBuilder()
-            {
-            }
-
-            public async Task<int> ExecuteAsync()
-            {
-                return 0;
-            }
-        }
-
-        public class UpdateCommandBuilder : SqlCommandBuilder<UpdateCommandBuilder>
-        {
-            public UpdateCommandBuilder()
             {
             }
 
@@ -383,6 +378,6 @@ namespace <#= Namespace #>
     public string CustomPostClass { get; set; } = "";
 
     #nullable enable
-    public IList<(string SourceName, string TypeName, string? Converter)> Columns { get; set; } = [];
+    public IList<(string SourceName, string TypeName, bool IsPrimaryKey, string? Converter)> Columns { get; set; } = [];
     #nullable disable
 #>

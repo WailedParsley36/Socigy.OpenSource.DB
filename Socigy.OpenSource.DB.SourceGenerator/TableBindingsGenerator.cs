@@ -15,6 +15,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
     {
         private static readonly string ColumnAttributeFullName = typeof(ColumnAttribute).FullName!;
         private static readonly string TableAttributeFullName = typeof(TableAttribute).FullName!;
+        private static readonly string PrimaryKeyAttributeFullName = typeof(PrimaryKeyAttribute).FullName!;
 
         private static string GetNamespace(INamedTypeSymbol symbol)
         {
@@ -77,19 +78,24 @@ namespace Socigy.OpenSource.DB.SourceGenerator
 
                     if (member.AttributeLists.Count > 0)
                     {
-                        var columnAttribute = symbolInfo.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == ColumnAttributeFullName);
+                        var attrs = symbolInfo.GetAttributes();
+
+                        var columnAttribute = attrs.FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == ColumnAttributeFullName);
                         if (columnAttribute != null &&
                             columnAttribute.ConstructorArguments.Length > 0 &&
                             columnAttribute.ConstructorArguments[0].Value != null)
                         {
                             columnInfo.DatabaseName = columnAttribute.ConstructorArguments[0].Value!.ToString();
                         }
+
+                        columnInfo.IsPrimaryKey = attrs.Any(x => x.AttributeClass?.ToDisplayString() == PrimaryKeyAttributeFullName);
                     }
 
                     tableColNameClassTemplate.Columns.Add(columnInfo);
                     tableSyntaxTemplate.Columns.Add((
                         SourceName: symbolInfo.Name,
                         TypeName: symbolInfo.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                        IsPrimaryKey: columnInfo.IsPrimaryKey,
                         Converter: member.AttributeLists.Count > 0 ? symbolInfo.GetAttributes()
                             .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == ColumnAttributeFullName)?
                             .NamedArguments

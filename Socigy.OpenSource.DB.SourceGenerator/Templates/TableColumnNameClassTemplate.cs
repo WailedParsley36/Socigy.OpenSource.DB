@@ -139,17 +139,24 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             #line hidden
             this.Write("ColumnName,\r\n                    new ColumnInfo()\r\n                    {\r\n       " +
                     "                 Type = typeof(");
-            
+
             #line 65 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Type.Replace("?", " ")));
-            
+
             #line default
             #line hidden
             this.Write("),\r\n                        Value = ");
-            
+
             #line 66 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
-            
+
+            #line default
+            #line hidden
+            this.Write(",\r\n                        IsPrimaryKey = ");
+
+            #line 67 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.IsPrimaryKey ? "true" : "false"));
+
             #line default
             #line hidden
             this.Write("\r\n                    }\r\n                },\r\n");
@@ -220,6 +227,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         public string Name { get; set; }
         public string Type { get; set; }
         public string DatabaseName { get; set; }
+        public bool IsPrimaryKey { get; set; }
     }
 
         

@@ -1,0 +1,120 @@
+<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System;
+using System.Data.Common;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.Core.CommandBuilders;
+using Socigy.OpenSource.DB.Core.Interfaces;
+using Npgsql;
+using NpgsqlTypes;
+
+#nullable enable
+
+namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
+{
+    public class PostgresqlUpdateCommandBuilder<T> : SqlCommandBuilder<PostgresqlUpdateCommandBuilder<T>>
+        where T : IDbTable
+    {
+        private readonly T _TableRow;
+        private Dictionary<string, ColumnInfo>? _ColumnInfo;
+
+        public PostgresqlUpdateCommandBuilder(T rowInstance, Dictionary<string, ColumnInfo>? columnInfo = null)
+        {
+            _TableRow = rowInstance;
+            _ColumnInfo = columnInfo;
+        }
+
+        public PostgresqlUpdateCommandBuilder<T> WithColumnInfo(Dictionary<string, ColumnInfo> columnInfo)
+        {
+            _ColumnInfo = columnInfo;
+            return this;
+        }
+
+        /// <summary>
+        /// Executes UPDATE … SET … WHERE (pk columns) against the database.
+        /// All non-PK columns go into the SET clause; PK columns form the WHERE clause.
+        /// </summary>
+        /// <returns>Number of rows affected.</returns>
+        public async Task<int> ExecuteAsync()
+        {
+            if (_Connection == null)
+                throw new InvalidOperationException("No DbConnection provided. Call WithConnection() first.");
+
+            if (_Connection.State != System.Data.ConnectionState.Open)
+                await _Connection.OpenAsync();
+
+            await using var command = _Connection.CreateCommand() as NpgsqlCommand;
+            if (command == null)
+                return 0;
+
+            if (_Transaction != null)
+                command.Transaction = _Transaction as NpgsqlTransaction;
+
+            _ColumnInfo ??= _TableRow.GetColumns();
+
+            var setClauses   = new List<string>();
+            var whereClauses = new List<string>();
+
+            foreach (var row in _ColumnInfo)
+            {
+                string colName  = row.Key;
+                object? value   = row.Value.Value;
+                Type type       = row.Value.Type;
+                bool isPk       = row.Value.IsPrimaryKey;
+
+                string paramName = $"@{colName}";
+                var param = new NpgsqlParameter(paramName, value ?? DBNull.Value);
+
+                if (value == null || value == DBNull.Value)
+                    param.NpgsqlDbType = GetDbType(type);
+
+                command.Parameters.Add(param);
+
+                if (isPk)
+                    whereClauses.Add($"\"{colName}\" = {paramName}");
+                else
+                    setClauses.Add($"\"{colName}\" = {paramName}");
+            }
+
+            if (setClauses.Count == 0)
+                throw new InvalidOperationException("No non-PK columns found to update.");
+            if (whereClauses.Count == 0)
+                throw new InvalidOperationException("No PK columns found for WHERE clause. Ensure at least one property has [PrimaryKey].");
+
+            command.CommandText =
+                $"UPDATE \"{_TableRow.GetTableName()}\" SET {string.Join(", ", setClauses)} WHERE {string.Join(" AND ", whereClauses)}";
+
+            Console.WriteLine($"[PostgresqlUpdateCommandBuilder] Executing: {command.CommandText}");
+
+            return await command.ExecuteNonQueryAsync();
+        }
+
+        private static NpgsqlDbType GetDbType(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            return type switch
+            {
+                Type t when t == typeof(int)      => NpgsqlDbType.Integer,
+                Type t when t == typeof(long)     => NpgsqlDbType.Bigint,
+                Type t when t == typeof(string)   => NpgsqlDbType.Text,
+                Type t when t == typeof(bool)     => NpgsqlDbType.Boolean,
+                Type t when t == typeof(DateTime) => NpgsqlDbType.Timestamp,
+                Type t when t == typeof(float)    => NpgsqlDbType.Real,
+                Type t when t == typeof(double)   => NpgsqlDbType.Double,
+                Type t when t == typeof(decimal)  => NpgsqlDbType.Numeric,
+                Type t when t == typeof(Guid)     => NpgsqlDbType.Uuid,
+                Type t when t == typeof(byte[])   => NpgsqlDbType.Bytea,
+                Type t when t == typeof(short)    => NpgsqlDbType.Smallint,
+                Type t when t == typeof(char)     => NpgsqlDbType.Char,
+                _                                 => NpgsqlDbType.Text
+            };
+        }
+    }
+}
+
+#nullable disable

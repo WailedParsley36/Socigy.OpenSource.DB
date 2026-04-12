@@ -286,31 +286,75 @@ using Socigy.OpenSource.DB.Core.Parsers.");
                 .ExecuteAsync();
         }
 
-        public static UpdateCommandBuilder Update()
+        public ");
+
+            #line 105 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+
+            #line default
+            #line hidden
+            this.Write("UpdateCommandBuilder<");
+
+            #line 105 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+
+            #line default
+            #line hidden
+            this.Write(@"> Update()
         {
-            return new UpdateCommandBuilder();
+            return new ");
+
+            #line 108 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+
+            #line default
+            #line hidden
+            this.Write("UpdateCommandBuilder<");
+
+            #line 108 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+
+            #line default
+            #line hidden
+            this.Write(@">(this);
+        }
+
+        public static async Task<int> UpdateAsync(");
+
+            #line 112 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+
+            #line default
+            #line hidden
+            this.Write(@" instance, DbConnection connection)
+        {
+            return await new ");
+
+            #line 115 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbEnginePrefix));
+
+            #line default
+            #line hidden
+            this.Write("UpdateCommandBuilder<");
+
+            #line 115 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableSyntaxGeneratorTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+
+            #line default
+            #line hidden
+            this.Write(@">(instance)
+                .WithConnection(connection)
+                .ExecuteAsync();
         }
 
         public static DeleteCommandBuilder Delete()
         {
             return new DeleteCommandBuilder();
         }
-        
+
         public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
         {
             public DeleteCommandBuilder()
-            {
-            }
-
-            public async Task<int> ExecuteAsync()
-            {
-                return 0;
-            }
-        }
-
-        public class UpdateCommandBuilder : SqlCommandBuilder<UpdateCommandBuilder>
-        {
-            public UpdateCommandBuilder()
             {
             }
 
@@ -646,7 +690,7 @@ using Socigy.OpenSource.DB.Core.Parsers.");
     public string CustomPostClass { get; set; } = "";
 
     #nullable enable
-    public IList<(string SourceName, string TypeName, string? Converter)> Columns { get; set; } = [];
+    public IList<(string SourceName, string TypeName, bool IsPrimaryKey, string? Converter)> Columns { get; set; } = [];
     #nullable disable
 
         

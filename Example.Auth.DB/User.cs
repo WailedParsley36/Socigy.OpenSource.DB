@@ -21,7 +21,8 @@ namespace Example.Auth.DB
         [PrimaryKey]
         public Guid ID { get; set; }
 
-        public string Username { get; set; }
+        [Renamed("Username")]
+        public string Userna { get; set; }
         public short Tag { get; set; }
 
         public string? IconUrl { get; set; }
