@@ -45,7 +45,6 @@ namespace Socigy.OpenSource.DB.SourceGenerator
             {
                 case DatabasePrefixes.Postgresql:
                     ctx.AddSource($"{program.DatabasePrefix}InsertCommandBuilder.g.cs", new PostgresqlInsertCommandBuilder().TransformText());
-                    ctx.AddSource($"{program.DatabasePrefix}UpdateCommandBuilder.g.cs", new PostgresqlUpdateCommandBuilder().TransformText());
                     break;
             }
         }

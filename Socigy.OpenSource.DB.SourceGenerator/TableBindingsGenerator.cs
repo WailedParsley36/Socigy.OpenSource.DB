@@ -2,9 +2,11 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Socigy.OpenSource.DB.Attributes;
 using Socigy.OpenSource.DB.SourceGenerator.Templates;
+using Socigy.OpenSource.DB.SourceGenerator.Templates.CommandBuilders;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -59,6 +61,23 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                     ClassName = tableColNameClassTemplate.ClassName,
                     DbEnginePrefix = program.DatabasePrefix
                 };
+
+                var updateBuilderTemplate = new PostgresqlUpdateCommandBuilder()
+                {
+                    ClassName = tableColNameClassTemplate.ClassName,
+                    Namespace = tableColNameClassTemplate.Namespace,
+                    CustomPreClass = string.Empty,
+                    CustomPostClass = string.Empty
+                };
+                ctx.AddSource($"{tableColNameClassTemplate.ClassName}.builder.update.g.cs", updateBuilderTemplate.TransformText());
+                var deleteBuilderTemplate = new PostgresqlDeleteCommandBuilder()
+                {
+                    ClassName = tableColNameClassTemplate.ClassName,
+                    Namespace = tableColNameClassTemplate.Namespace,
+                    CustomPreClass = string.Empty,
+                    CustomPostClass = string.Empty
+                };
+                ctx.AddSource($"{tableColNameClassTemplate.ClassName}.builder.delete.g.cs", deleteBuilderTemplate.TransformText());
 
                 foreach (var member in table.Members)
                 {

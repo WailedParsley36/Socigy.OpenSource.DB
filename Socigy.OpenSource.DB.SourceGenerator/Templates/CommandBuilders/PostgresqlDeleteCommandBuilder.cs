@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Socigy.OpenSource.DB.SourceGenerator.Templates
+namespace Socigy.OpenSource.DB.SourceGenerator.Templates.CommandBuilders
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+    #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public partial class MigrationManagerTemplate : MigrationManagerTemplateBase
+    public partial class PostgresqlDeleteCommandBuilder : PostgresqlDeleteCommandBuilderBase
     {
 #line hidden
         /// <summary>
@@ -28,228 +28,234 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\nusing Microsoft.Extensions.DependencyInjection;\nusing Microsoft.Extensions.Loggi" +
-                    "ng;\nusing Socigy.OpenSource.DB.Core.Migrations;\nusing Socigy.OpenSource.DB.Core;" +
-                    "\nusing Socigy.OpenSource.DB.Migrations;\n\n#nullable enable\n\nnamespace ");
+            this.Write(@"using System;
+using System.Text;
+using System.Data.Common;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using Socigy.OpenSource.DB.Core;
+using Socigy.OpenSource.DB.Core.CommandBuilders;
+using Socigy.OpenSource.DB.Core.Interfaces;
+using Socigy.OpenSource.DB.Core.Delegates;
+using Socigy.OpenSource.DB.Core.Parsers;
+using Socigy.OpenSource.DB.Core.Parsers.Postgresql;
+using Npgsql;
+using NpgsqlTypes;
+using ");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(BaseNamespace));
-            
-            #line default
-            #line hidden
-            this.Write("\n{\n    public static partial class ");
-            
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
-            
-            #line default
-            #line hidden
-            this.Write("\n    {\n        public class MigrationManager : IMigrationManager\n        {\n      " +
-                    "      private static readonly List<ILocalMigration> _localMigrationsOrderedDesc " +
-                    "=\n            [\n    ");
-            
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-
-                foreach (var migrationName in MigrationClassNames.Reverse()) 
-                {
-    
+            #line 20 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
             
             #line default
             #line hidden
-            this.Write("          new ");
+            this.Write(";\r\n\r\nnamespace Socigy.OpenSource.DB.CommandBuilders.Postgresql\r\n{\r\n    ");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(migrationName));
-            
-            #line default
-            #line hidden
-            this.Write("(),\n    ");
-            
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-
-                }
-    
+            #line 24 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CustomPreClass));
             
             #line default
             #line hidden
-            this.Write(@"
-            ];
-
-            private Dictionary<string, ILocalMigration> _localMigrations = _localMigrationsOrderedDesc.ToDictionary(static x => x.Id, static x => x);
-            public Dictionary<string, ILocalMigration> LocalMigrations => _localMigrations;
-
-
-            private readonly ILogger _Logger;
-            private readonly IDbConnectionFactory _ConnectionFactory;
-            public MigrationManager(ILogger<MigrationManager> logger, [FromKeyedServices(""");
+            this.Write("\r\n    public class Postgresql");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write("\")] IDbConnectionFactory connectionFactory)\n            {\n                _Logger" +
-                    " = logger;\n                _ConnectionFactory = connectionFactory;\n            }" +
-                    "\n\n            public Task EnsureLatestVersion()\n            {\n                re" +
-                    "turn EnsureMigration(_localMigrationsOrderedDesc.First());\n            }\n       " +
-                    "     public Task EnsureMigration(string migrationId)\n            {\n             " +
-                    "   if (!_localMigrations.TryGetValue(migrationId, out ILocalMigration? migration" +
-                    "))\n                    throw new MissingMemberException($\"Missing local migratio" +
-                    "n with ID {migrationId}\"); \n\n                return EnsureMigration(migration);\n" +
-                    "            }\n            public async Task EnsureMigration(ILocalMigration migr" +
-                    "ation)\n            {\n                await _ConnectionFactory.EnsureDbExists();\n" +
-                    "\n                var dbVersion = await GetCurrentMigrationVersion();\n           " +
-                    "     int sourceMigrationIndex = -1;\n                int targetMigrationIndex = -" +
-                    "1;\n\n                if (dbVersion == null)\n                    sourceMigrationIn" +
-                    "dex = _localMigrationsOrderedDesc.Count;\n                else \n                {" +
-                    "\n                    sourceMigrationIndex = _localMigrationsOrderedDesc.FindInde" +
-                    "x(x => x.Id == dbVersion.HumanId);\n                    if (sourceMigrationIndex " +
-                    "< 0)\n                    {\n                        throw new InvalidDataExceptio" +
-                    "n($\"Unable to find local migration with ID {dbVersion.HumanId} that is in the Da" +
-                    "tabase. Aborting!\");\n                    }\n                }\n\n                ta" +
-                    "rgetMigrationIndex = _localMigrationsOrderedDesc.FindIndex(x => x.Id == migratio" +
-                    "n.Id);\n                if (targetMigrationIndex < 0) throw new InvalidDataExcept" +
-                    "ion($\"Target migration {migration.Id} not found locally.\");\n\n\n                if" +
-                    " (sourceMigrationIndex == targetMigrationIndex)\n                {\n              " +
-                    "      _Logger.LogInformation($\"");
+            this.Write("DeleteCommandBuilder<T> : SqlCommandBuilder<Postgresql");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 25 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(@" is already at version: {migration.Id}"");
-                    return;
-                }
-
-                using var connection = _ConnectionFactory.Create();
-                await connection.OpenAsync();
-
-                if (sourceMigrationIndex > targetMigrationIndex)
-                {
-                    for (int i = sourceMigrationIndex - 1; i >= targetMigrationIndex; i--)
-                    {
-                        var migToApply = _localMigrationsOrderedDesc[i];
-                        _Logger.LogInformation($""Applying UP migration: {migToApply.Id} - {migToApply.GetType().Name}"");
-
-                        using var command = connection.CreateCommand();
-                        command.CommandText = migToApply.UpSql;
-                        await command.ExecuteNonQueryAsync();
-
-                        // Record the migration
-                        await ");
+            this.Write("DeleteCommandBuilder<T>>\r\n        where T : IDbTable\r\n    {\r\n#if NET6_0_OR_GREATE" +
+                    "R\r\n        protected System.Data.Common.DbBatch? _Batch;\r\n\r\n        public Postg" +
+                    "resql");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 31 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(".Migration.InsertAsync(new ");
+            this.Write("DeleteCommandBuilder<T> WithBatch(DbBatch? batch)\r\n        {\r\n            if (bat" +
+                    "ch == null)\r\n            {\r\n                if (_Connection == null && _Transact" +
+                    "ion == null)\r\n                    throw new ArgumentNullException(nameof(batch)," +
+                    " \"If batch is null, either connection or transaction must be specified!\");\r\n\r\n  " +
+                    "              _Batch = _Connection?.CreateBatch() ?? _Transaction!.Connection?.C" +
+                    "reateBatch() ?? throw new InvalidOperationException(\"The provided transaction ha" +
+                    "s no DbConnection from which a DbBatch could be created\");\r\n                _Bat" +
+                    "ch.Transaction = _Transaction;\r\n            }\r\n            else\r\n               " +
+                    " _Batch = batch;\r\n\r\n            return this;\r\n        }\r\n\r\n        public void A" +
+                    "ddToBatch()\r\n        {\r\n            if (_Batch == null)\r\n                throw n" +
+                    "ew InvalidOperationException(\"Cannot add to batch when no DbBatch was provided. " +
+                    "Please call WithBatch() first.\");\r\n\r\n            var batchCommand = _Batch.Creat" +
+                    "eBatchCommand();\r\n            _Batch.BatchCommands.Add(batchCommand);\r\n        }" +
+                    "\r\n\r\n        public async Task AddToBatchAsync()\r\n        {\r\n            if (_Bat" +
+                    "ch == null)\r\n                throw new InvalidOperationException(\"Cannot add to " +
+                    "batch when no DbBatch was provided. Please call WithBatch() first.\");\r\n\r\n       " +
+                    "     var batchCommand = _Batch.CreateBatchCommand();\r\n            _Batch.BatchCo" +
+                    "mmands.Add(batchCommand);\r\n        }\r\n#endif\r\n\r\n        private readonly T? _Tab" +
+                    "leRow;\r\n        private Expression<Func<T, bool>>? _WhereClause;\r\n\r\n        publ" +
+                    "ic Postgresql");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
-            
-            #line default
-            #line hidden
-            this.Write(@".Migration
-                        {
-                            HumanId = migToApply.Id,
-                            AppliedAt = DateTime.UtcNow,
-                            ExecutedBy = $""{Environment.UserName} - {Environment.MachineName}"",
-                            IsRollback = false
-                        }, connection);
-                    }
-                }
-                else
-                {
-                    for (int i = sourceMigrationIndex; i < targetMigrationIndex; i++)
-                    {
-                        var migToApply = _localMigrationsOrderedDesc[i];
-                        _Logger.LogInformation($""Applying DOWN migration: {migToApply.Id} - {migToApply.GetType().Name}"");
-
-                        using var command = connection.CreateCommand();
-                        command.CommandText = migToApply.DownSql;
-                        await command.ExecuteNonQueryAsync();
-
-                        // Record the rollback
-                        await ");
-            
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 69 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(".Migration.InsertAsync(new ");
+            this.Write("DeleteCommandBuilder() { }\r\n        public Postgresql");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 70 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(@".Migration
-                        {
-                            HumanId = migToApply.Id,
-                            AppliedAt = DateTime.UtcNow,
-                            ExecutedBy = $""{Environment.UserName} - {Environment.MachineName}"",
-                            IsRollback = true
-                        }, connection);
-                    }
-                }
-            }
+            this.Write("DeleteCommandBuilder(T rowInstance)\r\n        {\r\n            _TableRow = rowInstan" +
+                    "ce;\r\n        }\r\n\r\n\r\n        public Postgresql");
+            
+            #line 76 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(@"DeleteCommandBuilder<T> Where(Expression<Func<T, bool>> where)
+        {
+            _WhereClause = where;
+            return this;
+        }
 
-            public async Task<ILocalMigration?> GetCurrentLocalMigrationVersion()
+        private ISqlVisitor GetWhereVisitor(ParameterExpression param, GetColumnName getColName, DbCommand command)
+        {
+            return new PostgresqlWhereVisitor(param, getColName, command);
+        }
+
+        public async Task<int> ExecuteAsync()
+        {
+#if NET6_0_OR_GREATER
+            if (_Batch != null)
+                throw new InvalidOperationException(""Cannot execute command when DbBatch was provided."");
+#endif
+
+            if (_Connection == null)
+                throw new InvalidOperationException(""No DbConnection provided."");
+
+            if (_Connection.State != System.Data.ConnectionState.Open)
+                await _Connection.OpenAsync();
+
+            await using var command = _Connection.CreateCommand() as NpgsqlCommand;
+            if (command == null) return 0;
+
+            if (_Transaction != null)
+                command.Transaction = _Transaction as NpgsqlTransaction;
+
+            string where = string.Empty;
+            if (_WhereClause != null)
             {
-                var latestVersion = await GetCurrentMigrationVersion();
-                if (latestVersion == null || !_localMigrations.TryGetValue(latestVersion.HumanId, out var result))
-                    return null;
-
-                return result;
-            }
-
-            public async Task<IMigration?> GetCurrentMigrationVersion()
-            {
-                try 
-                {
-                    using var connection = _ConnectionFactory.Create();
-
-                    var versions = ");
+                where = GetWhereVisitor(_WhereClause.Parameters[0], ");
             
-            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DatabaseName));
+            #line 109 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write(@".Migration.Query()
-                        .WithConnection(connection)
-                        .OrderByDesc(x => new object[] { x.AppliedAt })
-                        .ExecuteAsync();
-
-                    return await versions.FirstAsync();
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
+            this.Write(@".GetColumnDbName, command).Parse(_WhereClause);
             }
+            else if (_TableRow != null)
+            {
+                Dictionary<string, ColumnInfo> columns = _TableRow.GetPrimaryColumns();
+
+                if (columns.Count == 0)
+                    throw new InvalidOperationException(""No WHERE clause provided and the entity has no primary keys. Execution aborted to prevent deleting all rows in the table."");
+
+                StringBuilder whereBuilder = new(""WHERE "");
+                bool isFirst = true;
+
+                foreach (var col in columns)
+                {
+                    if (!isFirst)
+                        whereBuilder.Append("" AND "");
+
+                    isFirst = false;
+
+                    string colDbName = ");
+            
+            #line 128 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(@".GetColumnDbName(col.Key) ?? throw new InvalidDataException($""Invalid column mapping for key: {col.Key}"");
+                    string paramName = $""@p{command.Parameters.Count}"";
+
+                    whereBuilder.Append($""\""{colDbName}\"" = {paramName}"");
+
+                    NpgsqlParameter param = new(paramName, GetDbType(col.Value.Type))
+                    {
+                        Value = col.Value.Value ?? DBNull.Value
+                    };
+
+                    command.Parameters.Add(param);
+                }
+
+                where = whereBuilder.ToString();
+            }
+
+            command.CommandText = $@""
+        DELETE FROM """"{");
+            
+            #line 145 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(@".TableName}""""
+        {where}"";
+
+            return await command.ExecuteNonQueryAsync();
+        }
+
+        public NpgsqlDbType GetDbType(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            return type switch
+            {
+                Type t when t == typeof(int) => NpgsqlDbType.Integer,
+                Type t when t == typeof(long) => NpgsqlDbType.Bigint,
+                Type t when t == typeof(string) => NpgsqlDbType.Text,
+                Type t when t == typeof(bool) => NpgsqlDbType.Boolean,
+                Type t when t == typeof(DateTime) => NpgsqlDbType.Timestamp,
+                Type t when t == typeof(float) => NpgsqlDbType.Real,
+                Type t when t == typeof(double) => NpgsqlDbType.Double,
+                Type t when t == typeof(decimal) => NpgsqlDbType.Numeric,
+                Type t when t == typeof(Guid) => NpgsqlDbType.Uuid,
+                Type t when t == typeof(byte[]) => NpgsqlDbType.Bytea,
+                Type t when t == typeof(short) => NpgsqlDbType.Smallint,
+                Type t when t == typeof(char) => NpgsqlDbType.Char,
+                _ => NpgsqlDbType.Text
+            };
         }
     }
-}
-
-#nullable disable
-
-");
+    ");
+            
+            #line 173 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CustomPostClass));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n}\r\n\r\n#nullable disable\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\MigrationManagerTemplate.tt"
+        #line 178 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\CommandBuilders\PostgresqlDeleteCommandBuilder.tt"
 
-    public string DatabaseName { get; set; }
-    public string BaseNamespace { get; set; }
-    public IList<string> MigrationClassNames { get; set; } = [];
+	public string ClassName { get; set; }
+	public string Namespace { get; set; }
+
+    public string CustomPreClass { get; set; } = "";
+    public string CustomPostClass { get; set; } = "";
 
         
         #line default
@@ -263,7 +269,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public class MigrationManagerTemplateBase
+    public class PostgresqlDeleteCommandBuilderBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

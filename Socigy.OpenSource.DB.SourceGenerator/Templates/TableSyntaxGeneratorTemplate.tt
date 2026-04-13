@@ -101,33 +101,27 @@ namespace <#= Namespace #>
                 .ExecuteAsync();
         }
 
-        public <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>> Update()
+        public <#= DbEnginePrefix #><#= ClassName #>UpdateCommandBuilder<<#= ClassName #>> Update()
         {
-            return new <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>>(this);
+            return new <#= DbEnginePrefix #><#= ClassName #>UpdateCommandBuilder<<#= ClassName #>>(this);
         }
 
         public static async Task<int> UpdateAsync(<#= ClassName #> instance, DbConnection connection)
         {
-            return await new <#= DbEnginePrefix #>UpdateCommandBuilder<<#= ClassName #>>(instance)
+            return await new <#= DbEnginePrefix #><#= ClassName #>UpdateCommandBuilder<<#= ClassName #>>(instance)
                 .WithConnection(connection)
+                .WithAllFields()
                 .ExecuteAsync();
         }
 
-        public static DeleteCommandBuilder Delete()
+        public static <#= DbEnginePrefix #><#= ClassName #>DeleteCommandBuilder<<#= ClassName #>> DeleteNonInstance()
         {
-            return new DeleteCommandBuilder();
+            return new <#= DbEnginePrefix #><#= ClassName #>DeleteCommandBuilder<<#= ClassName #>>();
         }
 
-        public class DeleteCommandBuilder : SqlCommandBuilder<DeleteCommandBuilder>
+        public <#= DbEnginePrefix #><#= ClassName #>DeleteCommandBuilder<<#= ClassName #>> Delete()
         {
-            public DeleteCommandBuilder()
-            {
-            }
-
-            public async Task<int> ExecuteAsync()
-            {
-                return 0;
-            }
+            return new <#= DbEnginePrefix #><#= ClassName #>DeleteCommandBuilder<<#= ClassName #>>(this);
         }
 
         public class TableQueryBuilder : SqlCommandBuilder<TableQueryBuilder>

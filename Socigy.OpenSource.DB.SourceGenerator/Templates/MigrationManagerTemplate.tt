@@ -20,7 +20,7 @@ namespace <#= BaseNamespace #>
             private static readonly List<ILocalMigration> _localMigrationsOrderedDesc =
             [
     <#
-                foreach (var migrationName in MigrationClassNames) 
+                foreach (var migrationName in MigrationClassNames.Reverse()) 
                 {
     #>          new <#= migrationName #>(),
     <#

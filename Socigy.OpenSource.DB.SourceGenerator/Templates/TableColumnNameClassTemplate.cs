@@ -28,25 +28,28 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Socigy.OpenSource.DB.Core.Interfaces;\r\nusing System.Collections.Generic;\r\nu" +
-                    "sing Socigy.OpenSource.DB.Core.CommandBuilders;\r\n\r\n#nullable enable\r\n\r\nnamespace" +
-                    " ");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\nusing Socigy.OpenSource.DB.Core.Interfaces;\nusing System.Collections.Generic;\nus" +
+                    "ing Socigy.OpenSource.DB.Core.CommandBuilders;\n\n#nullable enable\n\nnamespace ");
             
-            #line 12 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
             
             #line default
             #line hidden
-            this.Write(" \r\n{\r\n    \r\n    ");
+            this.Write(" \n{\n    \n    ");
             
-            #line 15 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CustomPreClass));
             
             #line default
             #line hidden
-            this.Write("\r\n    public partial class ");
+            this.Write("\n    public partial class ");
             
-            #line 16 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
@@ -71,16 +74,16 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
 
         public const string TableName = """);
             
-            #line 34 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(TableName));
             
             #line default
             #line hidden
-            this.Write("\";\r\n        public string GetTableName() => TableName;\r\n\r\n        public static s" +
-                    "tring? GetColumnDbName(string column) \r\n        {\r\n            return column swi" +
-                    "tch \r\n            {\r\n");
+            this.Write("\";\n        public string GetTableName() => TableName;\n\n        public static stri" +
+                    "ng? GetColumnDbName(string column) \n        {\n            return column switch \n" +
+                    "            {\n");
             
-            #line 41 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
             foreach(var col in Columns) 
             {
@@ -88,30 +91,31 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             
             #line default
             #line hidden
-            this.Write("                \"");
+            this.Write("\n                \"");
             
-            #line 45 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
             
             #line default
             #line hidden
             this.Write("\" => ");
             
-            #line 45 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
             
             #line default
             #line hidden
-            this.Write("ColumnName,\r\n");
+            this.Write("ColumnName,\n");
             
-            #line 46 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
             }
         
             
             #line default
             #line hidden
-            this.Write(@"                _ => null
+            this.Write(@"
+                _ => null
             };
         }
 
@@ -122,7 +126,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
                 // TODO: Optimalize the typeof(), or remove if not needed!
 ");
             
-            #line 58 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
                 foreach(var col in Columns) 
                 {
@@ -130,47 +134,147 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             
             #line default
             #line hidden
-            this.Write("              {\r\n                    ");
+            this.Write("              {\n                    ");
             
-            #line 62 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
             
             #line default
             #line hidden
-            this.Write("ColumnName,\r\n                    new ColumnInfo()\r\n                    {\r\n       " +
-                    "                 Type = typeof(");
-
-            #line 65 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write("ColumnName,\n                    new ColumnInfo()\n                    {\n          " +
+                    "              Type = typeof(");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Type.Replace("?", " ")));
-
-            #line default
-            #line hidden
-            this.Write("),\r\n                        Value = ");
-
-            #line 66 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
-
-            #line default
-            #line hidden
-            this.Write(",\r\n                        IsPrimaryKey = ");
-
-            #line 67 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(col.IsPrimaryKey ? "true" : "false"));
-
-            #line default
-            #line hidden
-            this.Write("\r\n                    }\r\n                },\r\n");
             
-            #line 69 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line default
+            #line hidden
+            this.Write("),\n                        Value = ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write(",\n                        IsPrimaryKey = ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.IsPrimaryKey ? "true" : "false"));
+            
+            #line default
+            #line hidden
+            this.Write("\n                    }\n                },\n");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
                 }
 
             
             #line default
             #line hidden
-            this.Write("            };\r\n        }\r\n\r\n");
+            this.Write("\n            };\n        }\n\n        public Dictionary<string, ColumnInfo> GetPrima" +
+                    "ryColumns()\n        {\n            return new Dictionary<string, ColumnInfo>()\n  " +
+                    "          {\n");
             
-            #line 75 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+
+             foreach(var col in Columns.Where(x => x.IsPrimaryKey)) 
+             {
+
+            
+            #line default
+            #line hidden
+            this.Write("              {\n                    ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write("ColumnName,\n                    new ColumnInfo()\n                    {\n          " +
+                    "              Type = typeof(");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Type.Replace("?", " ")));
+            
+            #line default
+            #line hidden
+            this.Write("),\n                        Value = ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write(",\n                        IsPrimaryKey = true\n                    }\n             " +
+                    "   },\n");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+
+                }
+
+            
+            #line default
+            #line hidden
+            this.Write("\n            };\n        }\n\n        public (string Name, ColumnInfo Info)? GetColu" +
+                    "mn(string name)\n        {\n            switch(name)\n            {\n");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+
+               foreach (var col in Columns) 
+               {
+
+            
+            #line default
+            #line hidden
+            this.Write("\n                case ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write("ColumnName:\n                    return (\n                        ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write("ColumnName,\n                        new ColumnInfo()\n                        {\n  " +
+                    "                          Type = typeof(");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Type.Replace("?", " ")));
+            
+            #line default
+            #line hidden
+            this.Write("),\n                            Value = ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
+            
+            #line default
+            #line hidden
+            this.Write(",\n                            IsPrimaryKey = ");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(col.IsPrimaryKey ? "true" : "false"));
+            
+            #line default
+            #line hidden
+            this.Write("\n                        }\n                    );\n");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+
+               }
+
+            
+            #line default
+            #line hidden
+            this.Write("\n            }\n            \n            return null;\n        }\n");
+            
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
         foreach(var col in Columns) 
         {
@@ -178,41 +282,41 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
             
             #line default
             #line hidden
-            this.Write("        public const string ");
+            this.Write("\n        public const string ");
             
-            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.Name));
             
             #line default
             #line hidden
             this.Write("ColumnName = \"");
             
-            #line 79 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(col.DatabaseName));
             
             #line default
             #line hidden
-            this.Write("\";\r\n");
+            this.Write("\";\n");
             
-            #line 80 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
         }
         
             
             #line default
             #line hidden
-            this.Write("    }\r\n    ");
+            this.Write("\n    }\n    ");
             
-            #line 84 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+            #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CustomPostClass));
             
             #line default
             #line hidden
-            this.Write("\r\n}\r\n\r\n#nullable disable\r\n\r\n");
+            this.Write("\n}\n\n#nullable disable\n\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 89 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
+        #line 1 "D:\Socigy\OpenSource\Socigy.OpenSource.DB\Socigy.OpenSource.DB.SourceGenerator\Templates\TableColumnNameClassTemplate.tt"
 
     public string ClassName { get; set; }
     public string TableName { get; set; }

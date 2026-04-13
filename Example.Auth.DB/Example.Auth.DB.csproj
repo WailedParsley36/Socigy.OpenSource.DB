@@ -5,14 +5,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;DB_Migration</Configurations>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.33" />
+		<PackageReference Include="Socigy.OpenSource.DB" Version="0.1.50" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Example.Shared.DB\Example.Shared.DB.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Socigy\Migrations\" />
 	</ItemGroup>
 
 </Project>

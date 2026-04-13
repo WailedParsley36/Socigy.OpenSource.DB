@@ -9,5 +9,7 @@ namespace Socigy.OpenSource.DB.Core.Interfaces
     {
         string GetTableName();
         Dictionary<string, ColumnInfo> GetColumns();
+        Dictionary<string, ColumnInfo> GetPrimaryColumns();
+        (string Name, ColumnInfo Info)? GetColumn(string name);
     }
 }

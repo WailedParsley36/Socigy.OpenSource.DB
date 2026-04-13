@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Socigy.OpenSource.DB.SourceGenerator.Templates;
+using Socigy.OpenSource.DB.SourceGenerator.Templates.CommandBuilders;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -31,7 +32,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                 CustomPreClass = $"public static partial class {dbName}\n{{",
                 CustomPostClass = "}",
                 Columns = [
-                    new TableColumnNameClassTemplate.ColumnInfo() { Name = "Id", DatabaseName = "id", Type = typeof(long).FullName },
+                    new TableColumnNameClassTemplate.ColumnInfo() { Name = "Id", DatabaseName = "id", Type = typeof(long).FullName, IsPrimaryKey = true },
                     new TableColumnNameClassTemplate.ColumnInfo() { Name = "HumanId", DatabaseName = "human_id",  Type = typeof(string).FullName },
                     new TableColumnNameClassTemplate.ColumnInfo() { Name = "IsRollback", DatabaseName = "is_rollback",  Type = typeof(bool).FullName },
                     new TableColumnNameClassTemplate.ColumnInfo() { Name = "AppliedAt", DatabaseName = "applied_at" , Type = typeof(DateTime).FullName },
@@ -54,6 +55,25 @@ namespace Socigy.OpenSource.DB.SourceGenerator
                     ("ExecutedBy", typeof(string).FullName, false, null),
                 ],
             }.TransformText());
+
+            var updateBuilderTemplate = new PostgresqlUpdateCommandBuilder()
+            {
+                ClassName = "Migration",
+                Namespace = migrationTableNamespace,
+                CustomPreClass = $"using static {migrationTableNamespace}.{dbName};",
+                CustomPostClass = string.Empty
+            };
+            ctx.AddSource($"Migration.builder.update.g.cs", updateBuilderTemplate.TransformText());
+
+            var deleteBuilderTemplate = new PostgresqlDeleteCommandBuilder()
+            {
+                ClassName = "Migration",
+                Namespace = migrationTableNamespace,
+                CustomPreClass = $"using static {migrationTableNamespace}.{dbName};",
+                CustomPostClass = string.Empty
+            };
+            ctx.AddSource($"Migration.builder.delete.g.cs", deleteBuilderTemplate.TransformText());
+
 
             var migrationManager = new MigrationManagerTemplate()
             {

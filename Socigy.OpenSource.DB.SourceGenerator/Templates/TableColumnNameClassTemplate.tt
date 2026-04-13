@@ -73,6 +73,53 @@ namespace <#= Namespace #>
             };
         }
 
+        public Dictionary<string, ColumnInfo> GetPrimaryColumns()
+        {
+            return new Dictionary<string, ColumnInfo>()
+            {
+<#
+             foreach(var col in Columns.Where(x => x.IsPrimaryKey)) 
+             {
+#>              {
+                    <#= col.Name #>ColumnName,
+                    new ColumnInfo()
+                    {
+                        Type = typeof(<#= col.Type.Replace("?", " ") #>),
+                        Value = <#= col.Name #>,
+                        IsPrimaryKey = true
+                    }
+                },
+<#
+                }
+#>
+            };
+        }
+
+        public (string Name, ColumnInfo Info)? GetColumn(string name)
+        {
+            switch(name)
+            {
+<#
+               foreach (var col in Columns) 
+               {
+#>
+                case <#= col.Name #>ColumnName:
+                    return (
+                        <#= col.Name #>ColumnName,
+                        new ColumnInfo()
+                        {
+                            Type = typeof(<#= col.Type.Replace("?", " ") #>),
+                            Value = <#= col.Name #>,
+                            IsPrimaryKey = <#= col.IsPrimaryKey ? "true" : "false" #>
+                        }
+                    );
+<#
+               }
+#>
+            }
+            
+            return null;
+        }
 <#
         foreach(var col in Columns) 
         {
