@@ -17,6 +17,9 @@ namespace Socigy.OpenSource.DB.Tool.Structures.Analysis
 
         public string Type { get; set; }
 
+        /// <summary>The SQL table name this constraint belongs to. Used to disambiguate auto-generated names.</summary>
+        public string TableName { get; set; }
+
         [JsonIgnore]
         private string _Name;
         public string Name
@@ -34,16 +37,18 @@ namespace Socigy.OpenSource.DB.Tool.Structures.Analysis
                     _ => "UNKNW"
                 };
 
+                var tablePrefix = !string.IsNullOrEmpty(TableName) ? $"{TableName}_" : "";
+
                 if (Columns != null)
                 {
                     StringBuilder builder = new();
                     foreach (var col in Columns)
                         builder.Append($"{col}_");
-                    _Name = $"{prefix}_{builder.ToString().TrimEnd('_')}";
+                    _Name = $"{prefix}_{tablePrefix}{builder.ToString().TrimEnd('_')}";
                 }
                 else
                 {
-                    _Name = $"{prefix}_{Guid.NewGuid():N}";
+                    _Name = $"{prefix}_{tablePrefix}{Guid.NewGuid():N}";
                 }
 
                 return _Name;

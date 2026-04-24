@@ -11,8 +11,8 @@
 
 	<PropertyGroup>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Title>Socigy.OpenSource.DB</Title>
-		<PackageVersion>0.1.73</PackageVersion>
+		<Title>Socigy DB</Title>
+		<PackageVersion>0.1.74</PackageVersion>
 		<Company>Socigy s.r.o.</Company>
 		<Product>$(PackageTitle)</Product>
 		<Description>Automated cross-DB model generation and automation nuget. Auto-generates and propagates db model across multiple DB</Description>
@@ -23,6 +23,10 @@
 		<AssemblyVersion>$(PackageVersion)</AssemblyVersion>
 		<FileVersion>$(PackageVersion)</FileVersion>
 		<Version>$(PackageVersion)</Version>
+		<Authors>Socigy s.r.o., Patrik Stohanzl</Authors>
+		<RepositoryUrl>https://github.com/WailedParsley36/Socigy.OpenSource.DB</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,6 +38,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\docs\**" Pack="true" PackagePath="\docs"/>
+		<None Include="..\README.md" Pack="true" PackagePath="\"/>
 		<None Include="build\Socigy.OpenSource.DB.targets" Pack="true" PackagePath="build\Socigy.OpenSource.DB.targets" />
 	</ItemGroup>
 
@@ -48,8 +55,7 @@
 	</ItemGroup>
 
 	<Target Name="IncludeCoreDllInPackage" BeforeTargets="GenerateNuspec">
-		<MSBuild Projects="..\Socigy.OpenSource.DB.Core\Socigy.OpenSource.DB.Core.csproj"
-					 Targets="GetTargetPath">
+		<MSBuild Projects="..\Socigy.OpenSource.DB.Core\Socigy.OpenSource.DB.Core.csproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="SocigyCoreDll" />
 		</MSBuild>
 		<!--<ItemGroup>
@@ -68,8 +74,7 @@
 	</Target>
 
 	<Target Name="IncludeSourceGeneratorInPackage" BeforeTargets="GenerateNuspec">
-		<MSBuild Projects="..\Socigy.OpenSource.DB.SourceGenerator\Socigy.OpenSource.DB.SourceGenerator.csproj"
-                 Targets="GetTargetPath">
+		<MSBuild Projects="..\Socigy.OpenSource.DB.SourceGenerator\Socigy.OpenSource.DB.SourceGenerator.csproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="SocigySourceGenDll" />
 		</MSBuild>
 

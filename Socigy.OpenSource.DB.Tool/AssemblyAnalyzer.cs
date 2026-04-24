@@ -130,6 +130,7 @@ namespace Socigy.OpenSource.DB.Tool
                     if (resTable == null)
                         continue;
 
+                    StampConstraintTableName(resTable);
                     GeneratedSchema.Tables.Add(resTable);
                 }
                 catch (TypeLoadException ex)
@@ -439,7 +440,10 @@ namespace Socigy.OpenSource.DB.Tool
                         : ProcessAutoFlaggedEnumTable(table, property, attr);
 
                     if (junctionTable != null)
+                    {
+                        StampConstraintTableName(junctionTable);
                         GeneratedSchema.Tables.Add(junctionTable);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -878,6 +882,13 @@ namespace Socigy.OpenSource.DB.Tool
                 DateTime dt => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
                 _         => Convert.ToString(value, CultureInfo.InvariantCulture)
             };
+        }
+
+        private static void StampConstraintTableName(DbTable table)
+        {
+            if (table.Constraints == null) return;
+            foreach (var c in table.Constraints)
+                c.TableName ??= table.Name;
         }
 
         private static DbConstraint MakeCheckConstraint(string colName, string op, string value, string propertyName)
