@@ -114,6 +114,105 @@ public class InsertTests : BaseUnitTest
     }
 
     // ------------------------------------------------------------------
+    // ExcludeAutoFields(include) — exclude auto/default fields except listed ones
+    // ------------------------------------------------------------------
+
+    [Test]
+    public async Task Insert_ExcludeAutoFieldsWithInclude_IncludedFieldIsInserted()
+    {
+        // Id has [Default(DbDefaults.Guid.Random)]; we supply our own value and keep it
+        var id = Guid.NewGuid();
+        var item = new TestItem { Id = id, Name = "IncludeId", Priority = 5 };
+
+        bool ok = await item.Insert()
+            .WithConnection(Connection)
+            .ExcludeAutoFields(x => new object[] { x.Id })
+            .ExecuteAsync();
+
+        Assert.That(ok, Is.True);
+
+        var rows = await TestItem.Query(x => x.Id == id)
+            .WithConnection(Connection)
+            .ExecuteAsync()
+            .ToListAsync();
+
+        Assert.That(rows, Has.Count.EqualTo(1), "row with explicit Id should exist");
+        Assert.That(rows[0].Id, Is.EqualTo(id), "Id must match the supplied value");
+    }
+
+    [Test]
+    public async Task Insert_ExcludeAutoFieldsWithInclude_OtherAutoFieldStillExcluded()
+    {
+        // Id is included explicitly; CreatedAt still uses DB default
+        var id = Guid.NewGuid();
+        var item = new TestItem { Id = id, Name = "IncludeIdOnly", Priority = 7, CreatedAt = default };
+
+        await item.Insert()
+            .WithConnection(Connection)
+            .ExcludeAutoFields(x => new object[] { x.Id })
+            .WithValuePropagation()
+            .ExecuteAsync();
+
+        // DB fills CreatedAt via NOW() default — it must be non-default after propagation
+        Assert.That(item.CreatedAt, Is.Not.EqualTo(default(DateTime)),
+            "CreatedAt should be populated by the DB default via WithValuePropagation");
+    }
+
+    [Test]
+    public async Task Insert_ExcludeAutoFieldsWithInclude_AutoIncrementIncluded()
+    {
+        // Seq has [AutoIncrement]; supply an explicit value and verify it is stored
+        await ClearAsync("test_counters");
+        var id = Guid.NewGuid();
+        var counter = new TestCounter { Id = id, Seq = 999, Label = "explicit-seq" };
+
+        bool ok = await counter.Insert()
+            .WithConnection(Connection)
+            .ExcludeAutoFields(x => new object[] { x.Seq })
+            .ExecuteAsync();
+
+        Assert.That(ok, Is.True);
+
+        var rows = await TestCounter.Query(x => x.Id == id)
+            .WithConnection(Connection)
+            .ExecuteAsync()
+            .ToListAsync();
+
+        Assert.That(rows, Has.Count.EqualTo(1));
+        Assert.That(rows[0].Seq, Is.EqualTo(999), "explicit Seq value must be stored");
+    }
+
+    [Test]
+    public void Insert_ExcludeAutoFields_ThenExcludeAutoFieldsWithInclude_Throws()
+    {
+        var item = new TestItem();
+        Assert.Throws<InvalidOperationException>(() =>
+            item.Insert()
+                .ExcludeAutoFields()
+                .ExcludeAutoFields(x => new object[] { x.Id }));
+    }
+
+    [Test]
+    public void Insert_ExcludeAutoFieldsWithInclude_ThenExcludeAutoFields_Throws()
+    {
+        var item = new TestItem();
+        Assert.Throws<InvalidOperationException>(() =>
+            item.Insert()
+                .ExcludeAutoFields(x => new object[] { x.Id })
+                .ExcludeAutoFields());
+    }
+
+    [Test]
+    public void Insert_ExcludeAutoFieldsWithInclude_ThenWithAllFields_Throws()
+    {
+        var item = new TestItem();
+        Assert.Throws<InvalidOperationException>(() =>
+            item.Insert()
+                .ExcludeAutoFields(x => new object[] { x.Id })
+                .WithAllFields());
+    }
+
+    // ------------------------------------------------------------------
     // WithAllFields — forces auto-increment columns into the INSERT
     // ------------------------------------------------------------------
 

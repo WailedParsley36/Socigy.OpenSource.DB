@@ -95,6 +95,7 @@ namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
 
         private HashSet<string>? _SelectedDbColumns;
         private HashSet<string>? _ExcludedDbColumns;
+        private HashSet<string>? _IncludedAutoFields;
         private bool _ForceAllFields;
         private bool _PropagateValues;
         private bool _ExcludeAutoFields;
@@ -178,7 +179,26 @@ namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
         {
             if (_ForceAllFields)
                 throw new InvalidOperationException("Cannot combine ExcludeAutoFields() with WithAllFields().");
+            if (_IncludedAutoFields != null)
+                throw new InvalidOperationException("ExcludeAutoFields(include) has already been called. Use one form or the other.");
             _ExcludeAutoFields = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Excludes auto-increment and DB-default columns from the INSERT statement, but keeps the
+        /// explicitly listed columns so you can supply your own values for them.
+        /// Combine with <see cref="WithValuePropagation"/> to read remaining DB-generated values back after insert.
+        /// </summary>
+        /// <param name="include">Selector returning the auto/default columns to still include in the INSERT.</param>
+        public PostgresqlInsertCommandBuilder<T> ExcludeAutoFields(Expression<Func<T, object?[]>> include)
+        {
+            if (_ForceAllFields)
+                throw new InvalidOperationException("Cannot combine ExcludeAutoFields() with WithAllFields().");
+            if (_ExcludeAutoFields && _IncludedAutoFields == null)
+                throw new InvalidOperationException("ExcludeAutoFields() has already been called. Use one form or the other.");
+            _ExcludeAutoFields = true;
+            _IncludedAutoFields = ExtractDbColumnNames(include);
             return this;
         }
 
@@ -209,10 +229,16 @@ namespace Socigy.OpenSource.DB.CommandBuilders.Postgresql
                 return false;
 
             if (info.IsAutoIncrement && !_ForceAllFields)
-                return false;
+            {
+                if (_IncludedAutoFields == null || !_IncludedAutoFields.Contains(dbColName))
+                    return false;
+            }
 
             if (_ExcludeAutoFields && info.HasDbDefault)
-                return false;
+            {
+                if (_IncludedAutoFields == null || !_IncludedAutoFields.Contains(dbColName))
+                    return false;
+            }
 
             return true;
         }

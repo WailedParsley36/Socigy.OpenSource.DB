@@ -30,6 +30,31 @@ await user.Insert()
 // INSERT INTO "users" ("username") VALUES ($1)
 ```
 
+### `ExcludeAutoFields(include)`
+
+Same as `ExcludeAutoFields()`, but keeps the explicitly listed auto/default columns so you can supply your own values for them:
+
+```csharp
+var user = new User { Id = myId, Username = "alice" };   // supply our own Id
+
+await user.Insert()
+    .WithConnection(conn)
+    .ExcludeAutoFields(x => new object[] { x.Id })   // keep Id, let CreatedAt use DB default
+    .ExecuteAsync();
+// INSERT INTO "users" ("id", "username") VALUES ($1, $2)
+```
+
+This also lets you override an `[AutoIncrement]` column in the rare case you need to supply an explicit value:
+
+```csharp
+await counter.Insert()
+    .WithConnection(conn)
+    .ExcludeAutoFields(x => new object[] { x.Seq })   // explicit sequence value
+    .ExecuteAsync();
+```
+
+Combining `ExcludeAutoFields()` (no-arg) with `ExcludeAutoFields(include)` on the same builder throws `InvalidOperationException`.
+
 ### `WithValuePropagation()`
 
 Uses `RETURNING *` to read back the full row after insert and write DB-generated values back to the instance:
