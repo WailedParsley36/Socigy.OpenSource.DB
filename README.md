@@ -2,6 +2,8 @@
 
 A Roslyn source-generator–powered ORM for PostgreSQL. Define your tables with C# attributes, let the generator produce strongly-typed insert/update/delete/query builders, and use the CLI tool to generate and apply migrations — all without writing a line of SQL by hand.
 
+**Full documentation: [docs.socigy.com/database](https://docs.socigy.com/database/)**
+
 ## Features
 
 - **Attribute-driven schema** — map classes to tables with `[Table]`, `[Column]`, `[PrimaryKey]`, `[Default]`, and more
@@ -34,6 +36,8 @@ Or in your `.csproj`:
 The package includes both the runtime Core library and the Roslyn source generator. No manual project-reference wiring is needed.
 
 ## Documentation
+
+Full reference documentation is available at **[docs.socigy.com/database](https://docs.socigy.com/database/)**.
 
 | Topic | Description |
 |-------|-------------|

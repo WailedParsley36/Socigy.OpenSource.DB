@@ -17,17 +17,19 @@
 		<Company>Socigy s.r.o.</Company>
 		<Product>$(PackageTitle)</Product>
 		<Description>Automated cross-DB model generation and automation nuget. Auto-generates and propagates db model across multiple DB</Description>
-		<PackageTags>db;migration;automated</PackageTags>
-		<PackageOutputPath>/home/wailed/Documents/Dev/Packages/Nuget</PackageOutputPath>
-		<PackageOutputPath>D://Packages/Nuget</PackageOutputPath>
+		<PackageTags>db;migration;automated;postgresql;source-generator</PackageTags>
 
 		<AssemblyVersion>$(PackageVersion)</AssemblyVersion>
 		<FileVersion>$(PackageVersion)</FileVersion>
 		<Version>$(PackageVersion)</Version>
 		<Authors>Socigy s.r.o., Patrik Stohanzl</Authors>
+		<Copyright>Copyright © 2024 Socigy s.r.o.</Copyright>
 		<RepositoryUrl>https://github.com/WailedParsley36/Socigy.OpenSource.DB</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://docs.socigy.com/database/</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
