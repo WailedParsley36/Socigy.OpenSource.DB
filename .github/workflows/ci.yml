@@ -36,7 +36,9 @@ jobs:
         run: |
           echo '{
             "ConnectionStrings": {
-              "Default": "Host=localhost;Port=5432;Username=postgres;Password=1234;Database=postgres;Pooling=true;Minimum Pool Size=1;Maximum Pool Size=20;Connection Idle Lifetime=15;Include Error Detail=true"
+              "TestDb": {
+                "Default": "Host=localhost;Port=5432;Username=postgres;Password=1234;Database=postgres;Pooling=true;Minimum Pool Size=1;Maximum Pool Size=20;Connection Idle Lifetime=15;Include Error Detail=true"
+              }
             }
           }' > UnitTest.DB.Tests/appsettings.json
 
