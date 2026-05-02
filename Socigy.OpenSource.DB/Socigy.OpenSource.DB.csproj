@@ -13,7 +13,7 @@
 	<PropertyGroup>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Socigy DB</Title>
-		<PackageVersion>0.1.79</PackageVersion>
+		<PackageVersion>0.1.80</PackageVersion>
 		<Company>Socigy s.r.o.</Company>
 		<Product>$(PackageTitle)</Product>
 		<Description>Automated cross-DB model generation and automation nuget. Auto-generates and propagates db model across multiple DB</Description>
@@ -101,15 +101,15 @@
 
 		<RemoveDir Directories="$(ToolPublishDir)" />
 
-		<Message Text="[Socigy] Building Portable (Linux) Tool..." Importance="High" />
+		<Message Text="[Socigy] Building Portable Tool..." Importance="High" />
 		<MSBuild Projects="..\Socigy.OpenSource.DB.Tool\Socigy.OpenSource.DB.Tool.csproj" Targets="Publish" Properties="Configuration=Release;TargetFramework=net10.0;PublishDir=$(ToolPublishDirAny);SelfContained=false" />
 
-		<Message Text="[Socigy] Building Windows Tool (skipped on non-Windows)..." Importance="High" Condition="'$(OS)' == 'Windows_NT'" />
-		<MSBuild Projects="..\Socigy.OpenSource.DB.Tool\Socigy.OpenSource.DB.Tool.csproj" Targets="Publish" Properties="Configuration=Release;TargetFramework=net10.0-windows;PublishDir=$(ToolPublishDirWin);SelfContained=false" Condition="'$(OS)' == 'Windows_NT'" />
+		<Message Text="[Socigy] Building Windows Tool..." Importance="High" />
+		<MSBuild Projects="..\Socigy.OpenSource.DB.Tool\Socigy.OpenSource.DB.Tool.csproj" Targets="Publish" Properties="Configuration=Release;TargetFramework=net10.0-windows;PublishDir=$(ToolPublishDirWin);SelfContained=false;EnableWindowsTargeting=true" />
 
 		<ItemGroup>
 			<_ToolFilesAny Include="$(ToolPublishDirAny)**/*" />
-			<_ToolFilesWin Include="$(ToolPublishDirWin)**/*" Condition="'$(OS)' == 'Windows_NT'" />
+			<_ToolFilesWin Include="$(ToolPublishDirWin)**/*" />
 		</ItemGroup>
 
 		<ItemGroup>
@@ -119,7 +119,7 @@
 				<BuildAction>Content</BuildAction>
 			</_PackageFiles>
 
-			<_PackageFiles Include="@(_ToolFilesWin)" Condition="'$(OS)' == 'Windows_NT'">
+			<_PackageFiles Include="@(_ToolFilesWin)">
 				<PackagePath>tools/win/%(RecursiveDir)</PackagePath>
 				<Visible>false</Visible>
 				<BuildAction>Content</BuildAction>
