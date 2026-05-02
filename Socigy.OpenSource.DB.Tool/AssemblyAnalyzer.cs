@@ -117,6 +117,19 @@ namespace Socigy.OpenSource.DB.Tool
 
             DbGenerator = Configuration.GetSqlGenerator() ?? throw new InvalidDataException("Failed to get target DB platform");
 
+            // Normalize stale .NET type names in the saved schema (e.g. "system.dateonly" → "date").
+            // These can appear when a previous run fell through to GetDatabaseType's fallback branch.
+            if (Configuration.SavedSchema != null)
+            {
+                foreach (var savedTable in Configuration.SavedSchema.Tables)
+                    foreach (var col in savedTable.Columns ?? [])
+                    {
+                        var normalized = DbGenerator.GetDatabaseType(col.DatabaseType);
+                        if (!string.IsNullOrEmpty(normalized))
+                            col.DatabaseType = normalized;
+                    }
+            }
+
             foreach (var table in tables)
             {
                 try

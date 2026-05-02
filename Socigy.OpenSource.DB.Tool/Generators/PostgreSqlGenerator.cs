@@ -590,7 +590,25 @@ namespace Socigy.OpenSource.DB.Tool.Generators
           // Special
           { "guid", "uuid" },
           { "byte[]", "bytea" },
-          { "object", "jsonb" }
+          { "object", "jsonb" },
+
+          // Namespace-qualified aliases — normalizes stale structure.json values
+          // where GetDatabaseType previously fell through to the `return normalizedType` fallback.
+          { "system.int16", "smallint" },
+          { "system.int32", "integer" },
+          { "system.int64", "bigint" },
+          { "system.single", "real" },
+          { "system.double", "double precision" },
+          { "system.decimal", "numeric" },
+          { "system.boolean", "boolean" },
+          { "system.string", "text" },
+          { "system.char", "character(1)" },
+          { "system.datetime", "timestamp without time zone" },
+          { "system.datetimeoffset", "timestamp with time zone" },
+          { "system.dateonly", "date" },
+          { "system.timeonly", "time without time zone" },
+          { "system.timespan", "interval" },
+          { "system.guid", "uuid" },
         };
 
         public string GetDatabaseType(string csharpType)
