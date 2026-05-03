@@ -895,6 +895,17 @@ namespace Socigy.OpenSource.DB.Tool
                 var typeDefault = propType.IsValueType ? Activator.CreateInstance(propType) : null;
                 if (Equals(value, typeDefault)) return null;
 
+                // DatabaseEnum columns are stored as a PostgreSQL enum type — emit the member name as a quoted string.
+                // Check by full name to avoid cross-assembly type identity issues.
+                if (value is Enum && propType.GetCustomAttributesData()
+                        .Any(a => a.AttributeType.FullName == "Socigy.OpenSource.DB.Attributes.DatabaseEnumAttribute"))
+                    return $"'{value}'";
+
+                // Combined flag values (e.g. Test.First | Test.Fourth = 9) are not valid single enum member
+                // references and cannot be used as a DEFAULT in a column that points to an enum table row.
+                if (value is Enum && !Enum.IsDefined(propType, value))
+                    return null;
+
                 return FormatInitializerAsSql(value);
             }
             catch
@@ -914,6 +925,7 @@ namespace Socigy.OpenSource.DB.Tool
                 DateTime dt  => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
                 DateOnly d   => $"'{d:yyyy-MM-dd}'",
                 TimeOnly t   => $"'{t:HH:mm:ss}'",
+                Enum e       => Convert.ToInt64(e).ToString(CultureInfo.InvariantCulture),
                 _            => Convert.ToString(value, CultureInfo.InvariantCulture)
             };
         }
