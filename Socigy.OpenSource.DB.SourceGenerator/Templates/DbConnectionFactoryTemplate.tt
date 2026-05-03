@@ -121,7 +121,7 @@ namespace <#= BaseNamespace #>
             connectionString ??= _ConnectionString ?? throw new InvalidDataException("Unable to create DbConnection without a ConnectionString. Please provide a connection string and try again!");
 
             // Connecting to the correct database
-            connectionString += $"Database={_ServiceKey}";
+            connectionString = connectionString.TrimEnd().TrimEnd(';') + $";Database={_ServiceKey}";
 
             return new NpgsqlConnection(connectionString);
         }

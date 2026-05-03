@@ -122,7 +122,7 @@ namespace Socigy.OpenSource.DB.SourceGenerator.Templates
                     "nectionString ??= _ConnectionString ?? throw new InvalidDataException(\"Unable to" +
                     " create DbConnection without a ConnectionString. Please provide a connection str" +
                     "ing and try again!\");\r\n\r\n            // Connecting to the correct database\r\n    " +
-                    "        connectionString += $\"Database={_ServiceKey}\";\r\n\r\n            return new" +
+                    "        connectionString = connectionString.TrimEnd().TrimEnd(';') + $\";Database={_ServiceKey}\";\r\n\r\n            return new" +
                     " NpgsqlConnection(connectionString);\r\n        }\r\n\r\n        public async Task Sta" +
                     "rtAsync(CancellationToken cancellationToken)\r\n        {\r\n            if (_Servic" +
                     "eKey != null && _ConnectionString != null)\r\n                await EnsureDbExists" +

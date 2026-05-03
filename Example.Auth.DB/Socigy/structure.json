@@ -1,6 +1,6 @@
 {
-  "id": "202605012354_Initial_Migration_90b66f2b06",
-  "previousId": "202605011518_Added_procedures_73149000fa",
+  "id": "202605031059_Enum_Defaults_4985c37ae9",
+  "previousId": "202605012354_Initial_Migration_90b66f2b06",
   "tables": [
     {
       "name": "user_visibility",
@@ -242,14 +242,15 @@
           "name": "visibility",
           "sourceName": "Visibility",
           "dotnetType": "System.Int16",
-          "databaseType": "smallint"
+          "databaseType": "smallint",
+          "defaultValue": "CirclesOnly"
         }
       ],
       "constraints": [
         {
           "type": "check",
           "tableName": "users",
-          "name": "CHCK_users_3f1b083b6a7342a0ac044bf6eb520615",
+          "name": "CHCK_users_a5e8f36139754b64989b3f426fa4cfb6",
           "value": "LENGTH(email) \u003C 25"
         },
         {

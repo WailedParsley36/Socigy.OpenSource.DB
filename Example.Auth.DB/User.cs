@@ -57,7 +57,7 @@ namespace Example.Auth.DB
         public bool IsChild { get; set; }
         public Guid? ParentId { get; set; }
 
-        public UserVisibility Visibility { get; set; }
+        public UserVisibility Visibility { get; set; } = UserVisibility.CirclesOnly;
     }
 
     [FlagTable("users_parent_role")]

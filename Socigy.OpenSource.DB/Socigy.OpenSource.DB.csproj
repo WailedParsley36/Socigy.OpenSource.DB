@@ -13,7 +13,7 @@
 	<PropertyGroup>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Socigy DB</Title>
-		<PackageVersion>0.1.82</PackageVersion>
+		<PackageVersion>0.1.83</PackageVersion>
 		<Company>Socigy s.r.o.</Company>
 		<Product>$(PackageTitle)</Product>
 		<Description>Automated cross-DB model generation and automation nuget. Auto-generates and propagates db model across multiple DB</Description>
@@ -22,7 +22,7 @@
 		<AssemblyVersion>$(PackageVersion)</AssemblyVersion>
 		<FileVersion>$(PackageVersion)</FileVersion>
 		<Version>$(PackageVersion)</Version>
-		<Authors>Socigy s.r.o., Patrik Stohanzl</Authors>
+		<Authors>Socigy, PatrikStohanzl</Authors>
 		<Copyright>Copyright © 2024 Socigy s.r.o.</Copyright>
 		<RepositoryUrl>https://github.com/WailedParsley36/Socigy.OpenSource.DB</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

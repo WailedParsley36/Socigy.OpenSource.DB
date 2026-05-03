@@ -1,100 +1,169 @@
 # Socigy.OpenSource.DB
 
-A Roslyn source-generator–powered ORM for PostgreSQL. Define your tables with C# attributes, let the generator produce strongly-typed insert/update/delete/query builders, and use the CLI tool to generate and apply migrations — all without writing a line of SQL by hand.
+A Roslyn incremental source generator that reads your annotated C# classes at build time and emits a fully typed PostgreSQL data layer — INSERT, SELECT, UPDATE, DELETE, JOINs, set operations, and migrations — without a single line of boilerplate.
 
-**Full documentation: [docs.socigy.com/database](https://docs.socigy.com/database/)**
+**[Full documentation → docs.socigy.com/database](https://docs.socigy.com/database/)**
 
-## Features
-
-- **Attribute-driven schema** — map classes to tables with `[Table]`, `[Column]`, `[PrimaryKey]`, `[Default]`, and more
-- **Fluent CRUD builders** — insert, update, delete, and query via generated builder methods
-- **Lambda WHERE clauses** — `Query(x => x.Priority > 5 && x.Name != null)` translates to SQL
-- **Flagged enums** — N:M junction tables auto-generated from `[FlaggedEnum]` / `[FlaggedEnumTable]` + `[FlagTable]`
-- **Auto-increment sequences** — `[AutoIncrement]` exposes typed sequence helpers
-- **CHECK constraints** — simple `[Check("sql")]` or type-safe `[Check(typeof(T))]` with the `DbCheck` DSL
-- **Validation attributes** — `[Min]`, `[Max]`, `[Bigger]`, `[Lower]`, `[StringLength]`, `[Unique]`, and more
-- **Cross-platform constants** — `DbDefaults` and `DbValues` sentinel constants translate to correct SQL per engine
-- **Migration tool** — CLI that diffs your schema and generates versioned migration files
-- **Value Convertors** — transform C# values on the way in and out of the database with `[ValueConvertor(typeof(T))]`
-- **Procedure Mapping** — write raw SQL in `.sql` files and get type-safe C# call wrappers generated automatically
-- **Joins & Set Operations** — fluent `Join<T>()`, `LeftJoin<T>()`, `Union()`, `Intersect()`, `Except()`, and more
+---
 
 ## Installation
 
-Install via NuGet:
-
-```
+```bash
 dotnet add package Socigy.OpenSource.DB
 ```
 
-Or in your `.csproj`:
+A single package reference installs the Core runtime, the Roslyn source generator, and the CLI migration tool.
 
-```xml
-<PackageReference Include="Socigy.OpenSource.DB" Version="*" />
-```
+---
 
-The package includes both the runtime Core library and the Roslyn source generator. No manual project-reference wiring is needed.
+## Quick start
 
-## Documentation
-
-Full reference documentation is available at **[docs.socigy.com/database](https://docs.socigy.com/database/)**.
-
-| Topic | Description |
-|-------|-------------|
-| [Getting Started](docs/getting-started.md) | Installation, project setup, `socigy.json`, DI wiring |
-| [Defining Tables](docs/defining-tables.md) | All table and column attributes with examples |
-| [CRUD Operations](docs/crud-operations.md) | Insert, Update, Delete builders |
-| [Querying](docs/querying.md) | Query builder, WHERE expressions, ORDER BY, LIMIT/OFFSET |
-| [Flagged Enums](docs/flagged-enums.md) | N:M junction tables, static & instance helpers, in-memory cache, custom junction classes |
-| [Sequences & AutoIncrement](docs/sequences.md) | `[AutoIncrement]`, sequence accessors |
-| [CHECK Constraints](docs/check-constraints.md) | `[Check]`, `DbCheck` DSL, `IDbCheckExpression` |
-| [Validation Attributes](docs/validation-attributes.md) | Min/Max/Bigger/Lower/StringLength/Unique/Nullable/Equal |
-| [DbDefaults & DbValues](docs/db-constants.md) | Cross-platform sentinel constants for defaults and FK actions |
-| [Migrations](docs/migrations.md) | CLI tool, `socigy.json`, migration workflow, `ILocalMigration` |
-| [Value Convertors](docs/value-convertors.md) | Custom read/write transforms with `[ValueConvertor]` |
-| [Procedure Mapping](docs/procedure-mapping.md) | Type-safe wrappers generated from `.sql` files |
-| [Joins and Set Operations](docs/joins-and-set-operations.md) | Multi-table joins and UNION / INTERSECT / EXCEPT |
-
-## Quick Example
+**1. Annotate a class**
 
 ```csharp
-// 1. Define your model
+using Socigy.OpenSource.DB.Attributes;
+
 [Table("users")]
 public partial class User
 {
     [PrimaryKey, Default(DbDefaults.Guid.Random)]
     public Guid Id { get; set; }
 
-    [StringLength(50, MinLength = 3)]
-    public string Username { get; set; } = "";
+    [StringLength(3, 50), Unique]
+    public string Username { get; set; }
+
+    [StringLength(5, 254), Unique]
+    public string Email { get; set; }
+
+    public string Status { get; set; } = "active";   // → DEFAULT 'active'
 
     [Default(DbDefaults.Time.Now)]
     public DateTime CreatedAt { get; set; }
 }
+```
 
-// 2. Insert
-var user = new User { Username = "alice" };
+**2. Build — the generator emits all query methods**
+
+```bash
+dotnet build
+```
+
+**3. Use the generated methods**
+
+```csharp
+// INSERT
+var user = new User { Username = "alice", Email = "alice@example.com" };
 await user.Insert()
     .WithConnection(conn)
-    .ExcludeAutoFields()
-    .WithValuePropagation()   // writes DB-generated Id/CreatedAt back to instance
+    .ExcludeAutoFields()        // let the DB fill Id and CreatedAt
+    .WithValuePropagation()     // write DB-generated values back to the object
     .ExecuteAsync();
 
-// 3. Query
-var users = await User.Query(x => x.Username != null)
-    .WithConnection(conn)
+// SELECT
+await foreach (var u in User.Query(x => x.Status == "active")
     .OrderBy(x => new object[] { x.CreatedAt })
-    .Limit(10)
-    .ExecuteAsync()
-    .ToListAsync();
+    .Limit(20)
+    .WithConnection(conn)
+    .ExecuteAsync())
+{
+    Console.WriteLine(u.Username);
+}
 
-// 4. Update (selected fields only)
-user.Username = "alice2";
+// UPDATE
+user.Email = "newalice@example.com";
 await user.Update()
     .WithConnection(conn)
-    .WithFields(x => new object[] { x.Username })
+    .WithFields(x => new object[] { x.Email })
     .ExecuteAsync();
 
-// 5. Delete
+// DELETE
 await user.Delete().WithConnection(conn).ExecuteAsync();
 ```
+
+---
+
+## Features
+
+- **Zero boilerplate** — annotate once, every CRUD method is generated at build time
+- **Fully typed** — WHERE clauses, ORDER BY, and field selectors use C# expressions; no raw strings
+- **Migrations** — CLI tool analyses your compiled assembly and generates PostgreSQL DDL; a tracking table handles incremental applies
+- **JOINs** — `Join`, `LeftJoin`, `RightJoin`, `FullOuterJoin`, `NaturalJoin`, `CrossJoin`
+- **Set operations** — `Union`, `UnionAll`, `Intersect`, `IntersectAll`, `Except`, `ExceptAll`
+- **Flagged enums** — `[FlaggedEnum]` generates a junction table and typed flag helpers
+- **JSON columns** — `[JsonColumn]` and `[RawJsonColumn]` for JSONB with optional AOT-safe typed serialisation
+- **Procedure mapping** — write SQL in `.sql` files, get strongly-typed async wrappers at compile time
+- **Value convertors** — custom per-column read/write transformation via `IDbValueConvertor<T>`
+- **AOT compatible** — no runtime reflection; safe to publish with `PublishAot=true`
+
+---
+
+## DI setup
+
+Add `socigy.json` to your DB class library project root:
+
+```json
+{
+  "database": {
+    "platform": "postgresql",
+    "databaseName": "MyDb",
+    "generateDbConnectionFactory": true,
+    "generateWebAppExtensions": true
+  }
+}
+```
+
+The build generates `AddMyDb()` extension methods and registers `IDbConnectionFactory` and `IMigrationManager` in DI:
+
+```csharp
+// Program.cs
+builder.AddMyDb();
+
+var app = builder.Build();
+await app.EnsureLatestMyDbMigration();   // apply pending migrations on startup
+```
+
+Connection strings are read from `appsettings.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "MyDb": {
+      "Default": "Host=localhost;Port=5432;Username=postgres;Password=secret"
+    }
+  }
+}
+```
+
+---
+
+## Migrations
+
+Run the migration build configuration to generate DDL from your current model:
+
+```bash
+dotnet build -c DB_Migration
+```
+
+Migration files land in `Socigy/Migrations/`. Apply them at startup with `EnsureLatestMyDbMigration()` or manage them manually via `IMigrationManager.EnsureLatestVersion()`.
+
+---
+
+## Documentation
+
+Full reference covering every attribute, builder method, join variant, migration option, and DI pattern:
+
+**[docs.socigy.com/database](https://docs.socigy.com/database/)**
+
+| Section | Topics |
+|---|---|
+| [Getting started](https://docs.socigy.com/database/0.1.82/getting-started/quickstart) | Installation, project structure, `socigy.json` |
+| [Defining models](https://docs.socigy.com/database/0.1.82/defining-models/tables) | All attributes, column types, defaults, constraints |
+| [Querying](https://docs.socigy.com/database/0.1.82/querying/select) | SELECT, INSERT, UPDATE, DELETE, JOINs, set operations |
+| [Migrations](https://docs.socigy.com/database/0.1.82/migration/cli-tool) | CLI tool, schema generation, applying, custom migrations |
+| [Advanced](https://docs.socigy.com/database/0.1.82/advanced/procedure-mapping) | Procedure mapping, value convertors, Check DSL |
+
+---
+
+## License
+
+MIT License with Non-Commercial and Graphic Attribution Clauses — see [LICENSE](LICENSE).

@@ -122,4 +122,5 @@ jobs:
             "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
           dotnet nuget push ./nupkgs/*.nupkg \
             --source github \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
